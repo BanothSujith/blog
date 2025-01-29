@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom';
+
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,16 +25,17 @@ function Login() {
 
     try {
       setLoading(true);
-      const response = await axios.post('/api/login', {email: email.toLowerCase(), password }, { withCredentials: true });
+      const response = await axios.post('/api/login', { email: email.toLowerCase(), password }, { withCredentials: true });
+
       const token = response.data.token;
       const user = response.data.user;
       if (token && user) {
-        Cookies.set('token', token, { expires: 7 });
+        Cookies.set('token', token, { expires: 7, secure: true, sameSite: 'strict' });
         Cookies.set('user', JSON.stringify(user), { expires: 7 });
         setMessage('Login successful! Redirecting...');
         setTimeout(() => {
-          window.location.href = '/adminpage';
-        }, 100);
+          navigate('/adminpage');
+        }, 1);
       } else {
         setMessage('Login successful but no token provided.');
       }
@@ -44,9 +47,7 @@ function Login() {
   };
 
   return (
-    <div
-      className="text-white h-screen flex items-center justify-center bg-cover bg-center bg-[url('https://your-image-url')]"
-    >
+    <div className="text-white h-screen flex items-center justify-center bg-cover bg-center bg-[url('https://your-image-url')]">
       <div className="bg-[#85969bcd] border border-slate-600 rounded-md shadow-lg p-8 backdrop-filter backdrop-blur-md bg-opacity-30 relative">
         <h1 className="text-4xl font-bold text-center">Login</h1>
         <form onSubmit={handleLogin}>
@@ -76,13 +77,11 @@ function Login() {
             </label>
           </div>
 
-          <Link to="/register" className="text-blue-500 hover:underline">create One?</Link>
+          <Link to="/register" className="text-blue-500 hover:underline">Create One?</Link>
 
           <button
             type="submit"
-            className={`w-full mb-5 mt-5 text-[18px] rounded bg-blue-500 py-2 hover:bg-blue-600 transition-colors duration-300 ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`w-full mb-5 mt-5 text-[18px] rounded bg-blue-500 py-2 hover:bg-blue-600 transition-colors duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'LOGIN'}

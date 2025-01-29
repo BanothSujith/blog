@@ -1,29 +1,34 @@
 const Blog = require("../models/blog");
-const User = require("../models/userModel.js");
 const { cloudinaryService } = require("../service/cloudnaryService.js");
-
+const fs = require("fs/promises");
 const handleBlogPost = async (req, res) => {
   try {
-    const { title, content, blogtype } = req.body;
+    const { title, content } = req.body;
 
-    const coverimg = req.file;
+    const coverimg = req.files;
+ 
+
 
     if (!coverimg) {
       return res.status(400).json({ error: "Cover image is required" });
     }
-
-    const coverimgUrl = await cloudinaryService(coverimg.path);
-    const user = req.cookies.user ? JSON.parse(req.cookies.user) : null; 
+    const user = JSON.parse( req.cookies.user)
+   
     if (!user) {
       return res.status(401).json({ error: "User not authenticated" });
     }
-    const userExist = await User.findOne({ email: user.email }).select("name");
+
+    const coverimgUrl = await cloudinaryService(coverimg.coverImg[0].path);
+    const videoUrl = await cloudinaryService(coverimg.video[0].path);
+   
+    // console.log(userExist.name);
     const newBlog = new Blog({
       title,
       content,
       coverimgUrl,
-      blogtype,
-      createdBy: userExist,
+      blogtype:"video",
+      createdBy: user.name,
+      videoUrl
     });
 
     await newBlog.save();
@@ -36,6 +41,7 @@ const handleBlogPost = async (req, res) => {
     console.error("Error creating blog:", error);
     res.status(500).json({ error: "Internal server error" });
   }
+
 };
 
 module.exports = handleBlogPost;

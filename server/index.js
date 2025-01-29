@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const connection = require("./connection/connection");
 const routes = require("./routes/routes");
 const cookieParser = require("cookie-parser");
-
+const authorized = require("./middleware/auth");
 dotenv.config();
 
 const app = express();
@@ -13,10 +13,11 @@ app.use(cookieParser());
 
 connection(process.env.MONGODB_URI);
 
-app.use("/", routes);
+app.use("/",routes);
 
-app.get("/test", (req, res) => {
+app.get("/test", authorized,(req, res) => {
   console.log(req.cookies.user);
+  console.log(authorized)
   res.send("Hello World!");
 });
 

@@ -20,7 +20,7 @@ async function handleLogin(req, res) {
       return res.status(400).json({ error: 'Invalid email or password' });
     }
 
-    const token = setUser(user); // Ensure setUser returns the token
+    const token = setUser(user); 
 
     res.status(200)
       // .cookie('token', token, {

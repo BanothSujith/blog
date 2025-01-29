@@ -4,7 +4,7 @@ async function handleBlog(req, res) {
   try {
     const blogs = await Blog.find();
     res.status(200).json({
-      blogs,
+      blogs:blogs, message:"Blogs fetched successfully"
     });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
