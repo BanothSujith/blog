@@ -20,7 +20,7 @@ function VideoPage() {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        const response = await axios.get(`/api/${video}`, { withCredentials: true });
+        const response = await axios.get(`/api/video/${video}`, { withCredentials: true });
         setVideoData(response.data.video);
         setMessage(response.data.message);
       } catch (error) {
@@ -138,7 +138,7 @@ function VideoPage() {
         </div>
 
         {/* Right Section (Related Videos) */}
-        <div className="h-full w-[35%] border border-black p-4 ">
+        <div className="h-full w-[35%] border-l-2 px-4  ">
           <h1 className="text-2xl text-[var(--text)] font-semibold p-4">Related Videos</h1>
           <div className="flex flex-col gap-2 ">
             {relatedBlogs?.map((item) => (

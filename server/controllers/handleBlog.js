@@ -5,7 +5,6 @@ async function handleBlog(req, res) {
     const blogs = await Blog.find()
       .populate("createdBy", "profile userName") 
       .sort({ createdAt: -1 }); 
-console.log(blogs)
     res.status(200).json({
       blogs,
       message: "Blogs fetched successfully",

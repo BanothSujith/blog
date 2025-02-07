@@ -31,7 +31,7 @@ router.post('/api/video',authorized,  upload.fields([
 
   router.post('/api/:video/comments',authorized, handleBlogPostComments);
 
-router.get('/api/:video',handleSelectedVideo)
+router.get('/api/video/:video',handleSelectedVideo)
 
 router.get('/api/user/:userId',authorized,handleUserDetails)
 
