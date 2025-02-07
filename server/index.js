@@ -16,8 +16,6 @@ connection(process.env.MONGODB_URI);
 app.use("/",routes);
 
 app.get("/test", authorized,(req, res) => {
-  console.log(req.cookies.user);
-  console.log(authorized)
   res.send("Hello World!");
 });
 

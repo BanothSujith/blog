@@ -7,10 +7,12 @@ function Register() {
   const [phoneNo, setPhoneNo] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+const [profile,setProfile] = useState('');
+const [coverImg,setCoverImg] = useState('');
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!name || !email || !phoneNo || !password) {
+    if (!name || !email || !phoneNo || !password || !profile) {
       setMessage('All fields are required.');
       return;
     }
@@ -21,6 +23,13 @@ function Register() {
         email,
         phoneNo,
         password,
+        profile,
+        coverImg,
+       
+      },{
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
     
       console.log(response.data); 
@@ -49,6 +58,34 @@ function Register() {
       <div className="bg-[#85969bcd] border border-slate-600 rounded-md shadow-lg p-8 backdrop-filter backdrop-blur-md bg-opacity-30 relative">
         <h1 className="text-4xl font-bold text-center">Register</h1>
         <form onSubmit={handleRegister}>
+        <div className="relative my-4">
+            <input
+              type='file'
+              accept="image/*"
+              className="block w-72 py-2.5 px-0 text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder="select profile pic"
+              onChange={(e) => setProfile(e.target.files[0])}
+            />
+            <label
+              className="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              profile picture
+            </label>
+          </div>
+          <div className="relative my-4">
+            <input
+              type='file'
+              accept="image/*"
+              className="block w-72 py-2.5 px-0 text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder="select profile pic"
+              onChange={(e) => setCoverImg(e.target.files[0])}
+            />
+            <label
+              className="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+cover Image            </label>
+          </div>
+
           {/* Name Input */}
           <div className="relative my-4">
             <input

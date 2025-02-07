@@ -12,8 +12,8 @@ function BlogType({setShowBlogType}) {
   };
 
   return (
-    <div className="bg-orange-600 w-fit  px-4  py-1 rounded-lg flex items-center justify-center flex-col " >
-      <p className="text-white  ">BlogType</p>
+    <div className="bg-[var(--bg-card)] w-fit  px-4  py-1 rounded-lg flex items-center justify-center flex-col " >
+      <p className="text-[var(--text)]  ">BlogType</p>
       <div>
         <label className="flex items-center space-x-2 cursor-pointer" onClick={()=>handleBlogPost("blogvideo")}>
           <input
@@ -21,7 +21,7 @@ function BlogType({setShowBlogType}) {
             checked={selectedBlog === "blogvideo"}
             onChange={() => handleBlogPost("blogvideo")}
           />
-          <span className="text-white">Video</span>
+          <span className="text-[var(--text)]">Video</span>
         </label>
       </div>
       <div>
@@ -31,7 +31,7 @@ function BlogType({setShowBlogType}) {
             checked={selectedBlog === "blogimg"}
             onChange={() => handleBlogPost("blogimg")}
           />
-          <span className="text-white">Image</span>
+          <span className="text-[var(--text)]">Image</span>
         </label>
       </div>
     </div>

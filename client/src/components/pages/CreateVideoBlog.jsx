@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BsCloudUpload } from "react-icons/bs";
 
 const Spinner = () => (
   <div className="w-full h-full flex justify-center items-center">
@@ -18,30 +19,30 @@ function CreateVideoBlog() {
   const [coverImg, setCoverImg] = useState(null);
   const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(false);
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const handleTitleChange = (e) => setTitle(e.target.value);
-  const handleContentChange = (e) => setContent(e.target.value);
-  const handleCoverImgChange = (e) => setCoverImg(e.target.files[0]);
-  const handleVideoChange = (e) => setVideo(e.target.files[0]);
-
-  const cookie = document.cookie;
-  if (!cookie.includes("token")) {
-    navigate("/login");
-  }
+  useEffect(() => {
+    const cookie = document.cookie;
+    if (!cookie.includes("token")) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-  
+    if (!title || !content || !coverImg || !video) {
+      alert("All fields are required!");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
-    formData.append("blogtype", 'image');
+    formData.append("blogtype", "video");
     formData.append("video", video);
-    
-    
+    formData.append("coverImg", coverImg);
+
     setLoading(true);
 
     try {
@@ -49,13 +50,13 @@ const navigate = useNavigate();
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        withCredentials: true, 
       });
 
       if (response.data.message === "Blog created successfully") {
         alert("Blog created successfully!");
         setTitle("");
         setContent("");
-        setBlogType("");
         setCoverImg(null);
         setVideo(null);
       } else {
@@ -70,75 +71,90 @@ const navigate = useNavigate();
   };
 
   return (
-    <div className="w-1/2 h-full mx-auto p-6 bg-white shadow-md rounded-md overflow-auto hidescroolbar">
-      <h2 className="text-2xl font-bold text-center mb-4">Create a New Blog Post</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2" htmlFor="title">
-            Title:
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={handleTitleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
-        </div>
+    <div className="px-6 w-[45%] mx-auto h-screen border-3 bg-gray-400 overflow-auto">
+      <h1 className="flex justify-center font-bold text-3xl py-5">
+        ---UPLOAD VIDEO BLOG---
+      </h1>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col h-full w-full">
+            {/* Select Video File */}
+            <div className="relative w-full">
+              <fieldset className="border-3 rounded-2xl mb-4">
+                <legend className="mx-5 text-xl font-semibold">
+                  Select Video File
+                </legend>
+                <input
+                  type="file"
+                  accept="video/*"
+                  required
+                  onChange={(e) => setVideo(e.target.files[0])}
+                  className="w-full h-50 font-bold text-xl px-36 py-20 text-gray-700"
+                />
+                <label
+                  className="flex justify-center items-center w-full text-lg font-semibold"
+                >
+                  <BsCloudUpload className="absolute top-[43%] left-[18%] text-4xl text-gray-700" />
+                </label>
+              </fieldset>
+            </div>
 
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2" htmlFor="content">
-            Content:
-          </label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={handleContentChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            rows="4"
-            required
-          />
-        </div>
+            {/* Thumbnail File */}
+            <div className="w-full relative">
+              <fieldset className="border-3 rounded-2xl mb-4">
+                <legend className="mx-5 text-xl font-semibold">
+                  Thumbnail File
+                </legend>
+                <input
+                  type="file"
+                  accept="image/*"
+                  required
+                  onChange={(e) => setCoverImg(e.target.files[0])}
+                  className="w-full h-20 font-bold text-xl px-36 py-4 text-gray-700"
+                />
+                <label className="flex justify-center items-center w-full text-lg font-semibold">
+                  <BsCloudUpload className="absolute top-[35%] left-[18%] text-4xl text-gray-700" />
+                </label>
+              </fieldset>
+            </div>
 
-      
+            {/* Title */}
+            <fieldset className="border-3 rounded-2xl mb-4 p-2">
+              <legend className="mx-5 text-xl font-semibold">Title</legend>
+              <input
+                type="text"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full h-15 text-lg outline-none px-5"
+              />
+            </fieldset>
 
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2" htmlFor="coverImg">
-            Cover Image:
-          </label>
-          <input
-            type="file"
-            id="coverImg"
-            accept="image/*"
-            onChange={handleCoverImgChange}
-            className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
-            required
-          />
-        </div>
+            {/* Description */}
+            <fieldset className="border-3 rounded-xl mb-4 p-2">
+              <legend className="mx-5 text-xl font-semibold">Description</legend>
+              <textarea
+                required
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="w-full h-15 text-lg outline-none px-5"
+              />
+            </fieldset>
 
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2" htmlFor="video">
-            Video:
-          </label>
-          <input
-            type="file"
-            accept="video/*"
-            id="video"
-            onChange={handleVideoChange}
-            className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
-            required
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="w-full py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600"
-          disabled={loading}
-        >
-          {loading ? <Spinner /> : "Submit Blog"}
-        </button>
-      </form>
+            {/* Submit Button */}
+            <div className="py-2">
+              <button
+                type="submit"
+                className="w-full border-3 py-1 text-xl font-bold rounded-xl hover:bg-blue-500 hover:text-white"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      )}
     </div>
   );
 }

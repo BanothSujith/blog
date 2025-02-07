@@ -30,11 +30,11 @@ function Login() {
       const token = response.data.token;
       const user = response.data.user;
       if (token && user) {
-        Cookies.set('token', token, { expires: 7, secure: true, sameSite: 'strict' });
-        Cookies.set('user', JSON.stringify(user), { expires: 7 });
+        Cookies.set('token', token, { expires:7 , secure: true, sameSite: 'strict' });
+        Cookies.set('user', JSON.stringify(user),{ expires: 7 });
         setMessage('Login successful! Redirecting...');
         setTimeout(() => {
-          navigate('/adminpage');
+          navigate('/');
         }, 1);
       } else {
         setMessage('Login successful but no token provided.');

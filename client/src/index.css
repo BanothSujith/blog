@@ -3,7 +3,23 @@
 @tailwind utilities;
 
 
+.bright{
+    --bg-body:#dfe0e4;
+    --bg-card: #ecefff;
+    --text:#3d4344;
+    --navbar :#2C3E50;
+    --smallcard:rgb(227, 251, 255);
+}
+.dark{
+    --bg-body:#2b2b33;
+    --bg-card: #3a3e47;
+    --text: #f5f0f6;
+    --navbar :#5a5a5a;
+    --smallcard :#3A3F44;
+
+}
 .hidescroolbar{
     scrollbar-width: none;
     
 }
+

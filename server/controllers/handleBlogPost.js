@@ -1,4 +1,5 @@
 const Blog = require("../models/blog");
+const User = require("../models/userModel.js");
 const { cloudinaryService } = require("../service/cloudnaryService.js");
 const fs = require("fs/promises");
 const handleBlogPost = async (req, res) => {
@@ -12,12 +13,13 @@ const handleBlogPost = async (req, res) => {
     if (!coverimg) {
       return res.status(400).json({ error: "Cover image is required" });
     }
-    const user = JSON.parse( req.cookies.user)
+    const user = req.user.id
    
     if (!user) {
       return res.status(401).json({ error: "User not authenticated" });
     }
-
+    const userName = await User.findOne({_id:user}).select("userName")
+    // console.log("user",userName.userName)
     const coverimgUrl = await cloudinaryService(coverimg.coverImg[0].path);
     const videoUrl = await cloudinaryService(coverimg.video[0].path);
    
@@ -27,8 +29,8 @@ const handleBlogPost = async (req, res) => {
       content,
       coverimgUrl,
       blogtype:"video",
-      createdBy: user.name,
-      videoUrl
+      createdBy:userName._id,
+      videoUrl,
     });
 
     await newBlog.save();

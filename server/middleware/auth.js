@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const authorized = (req, res, next) => {
   const token = req.cookies.token 
+  // console.log(token)
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized, token not provided.' });
   }
@@ -10,7 +11,8 @@ const authorized = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    console.log('User authorized:', decoded);
+    // console.log('User authorized:', decoded);
+    req.user = decoded;
     next(); 
   } catch (error) {
     console.error('Token verification failed:', error);

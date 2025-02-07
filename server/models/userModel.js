@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    userName: {
       type: String,
       required: true,
     },
@@ -25,6 +25,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "user",
     },
+    profile:{
+      type:String,
+      required:true
+    },
+    coverImg:{
+      type:String,
+      default:"https://tse3.mm.bing.net/th?id=OIP.4qsdG0cxfVV7WyBNoYVseAHaC4&pid=Api&P=0&h=180"
+    }
   },
   { timestamps: true }
 );
