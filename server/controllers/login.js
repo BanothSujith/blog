@@ -10,7 +10,7 @@ async function handleLogin(req, res) {
   }
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email })
     if (!user) {
       return res.status(400).json({ error: 'Invalid email or password' });
     }
@@ -21,7 +21,8 @@ async function handleLogin(req, res) {
     }
 
     const token = setUser(user); 
-
+    const { password:_, ...userWithoutPassword } = user._doc;
+console.log(userWithoutPassword)
     res.status(200)
       // .cookie('token', token, {
       //   httpOnly: true,
@@ -30,10 +31,7 @@ async function handleLogin(req, res) {
       // })
       .json({
 
-        user: {
-          name: user.name,
-          email: user.email,
-        },
+        user:userWithoutPassword,
         token: token,
 
       });

@@ -1,20 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200..1000&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
 .bright{
-    --bg-body:#dfe0e4;
-    --bg-card: #ecefff;
-    --text:#3d4344;
-    --navbar :#2C3E50;
-    --smallcard:rgb(227, 251, 255);
+    --bg-body:#F5F3F4;
+    --bg-card: #ffffff;
+    --text:#0B090A;
+    --navbar :#D3D3D3;
+    --smallcard:#a7b8bac8;
 }
 .dark{
-    --bg-body:#2b2b33;
-    --bg-card: #3a3e47;
-    --text: #f5f0f6;
-    --navbar :#5a5a5a;
+    --bg-body:#0B090A;
+    --bg-card: #000000;
+    --text: #F5F3F4;
+    --navbar :#161A1D;
     --smallcard :#3A3F44;
 
 }

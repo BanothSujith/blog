@@ -16,8 +16,10 @@ function SkeletonPage() {
           </div>
         ))}
       </div>
+
     </div>
   );
 }
+
 
 export default SkeletonPage;

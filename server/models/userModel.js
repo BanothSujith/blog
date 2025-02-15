@@ -32,7 +32,10 @@ const userSchema = new mongoose.Schema(
     coverImg:{
       type:String,
       default:"https://tse3.mm.bing.net/th?id=OIP.4qsdG0cxfVV7WyBNoYVseAHaC4&pid=Api&P=0&h=180"
-    }
+    },
+    subscribers:{
+      type:[]
+    },
   },
   { timestamps: true }
 );

@@ -10,6 +10,9 @@ const handleImgPost = require('../controllers/handleImgPost');
 const authorized = require('../middleware/auth');
 const handleSelectedVideo = require('../controllers/handleSelectedVideo');
 const handleUserDetails = require('../controllers/handleUserDetails');
+const handleSubscription = require('../controllers/handleSubscription');
+const handleLikes = require('../controllers/handlelikes');
+const handleUnLikes = require('../controllers/handleUnlike');
 // const authorized = require('../middleware/auth')
 
 
@@ -20,7 +23,7 @@ router.post('/api/register',upload.fields([
 ]),handleRegister );
 
 router.post('/api/login',handleLogin );
-router.get('/api/blogs',handleBlog);
+router.get('/api/blogs',authorized,handleBlog);
 
 router.post('/api/video',authorized,  upload.fields([
     { name: 'coverImg', maxCount: 1 },
@@ -31,8 +34,13 @@ router.post('/api/video',authorized,  upload.fields([
 
   router.post('/api/:video/comments',authorized, handleBlogPostComments);
 
-router.get('/api/video/:video',handleSelectedVideo)
+router.get('/api/video/:video',authorized,handleSelectedVideo);
 
-router.get('/api/user/:userId',authorized,handleUserDetails)
+router.get('/api/user/:userId',authorized,handleUserDetails);
+
+router.post("/api/subscribe",authorized, handleSubscription);
+
+router.post("/api/like/:blogId",authorized,handleLikes);
+router.post("/api/unlike/:blogId",authorized,handleUnLikes);
 
 module.exports=router;

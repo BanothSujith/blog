@@ -1,29 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-// Load saved theme & videos from localStorage
 const savedTheme = localStorage.getItem('theme') || 'bright';
 const savedVideos = JSON.parse(localStorage.getItem('videos')) || [];
 
-// Theme Slice
 const themeSlice = createSlice({
   name: 'theme',
   initialState: {
-    currentTheme: savedTheme, // Load from localStorage
+    currentTheme: savedTheme, 
   },
   reducers: {
     changeTheme: (state, action) => {
       state.currentTheme = action.payload;
-      localStorage.setItem('theme', action.payload); // Save to localStorage
+      localStorage.setItem('theme', action.payload); 
     },
   },
 });
 
-// Video Playing Slice
 const videoPlayingSlice = createSlice({
   name: 'videoPlaying',
   initialState: {
     isVideoPlaying: false,
-    videos: savedVideos, // Load from localStorage
+    videos: savedVideos, 
+    isSettingsPageRequest : false,
   },
   reducers: {
     changeVideoPlaying: (state, action) => {
@@ -31,14 +28,17 @@ const videoPlayingSlice = createSlice({
     },
     setVideos: (state, action) => {
       state.videos = action.payload;
-      localStorage.setItem('videos', JSON.stringify(action.payload)); // Save to localStorage
+      localStorage.setItem('videos', JSON.stringify(action.payload)); 
     },
+    setSettingsPageRequest: (state, _) => {
+      state.isSettingsPageRequest = !state.isSettingsPageRequest
+    }
   },
 });
 
 // Export Actions
 export const { changeTheme } = themeSlice.actions;
-export const { changeVideoPlaying, setVideos } = videoPlayingSlice.actions;
+export const { changeVideoPlaying, setVideos,setSettingsPageRequest } = videoPlayingSlice.actions;
 
 // Export Reducers
 export const themeReducer = themeSlice.reducer;
