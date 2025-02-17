@@ -15,7 +15,8 @@ function Home() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("/api/blogs", {
+        console.log('Backend URL:', process.env.VITE_APP_BACKEND_URI);
+        const response = await axios.get(`${process.env.VITE_APP_BACKEND_URI}/api/blogs`, {
           withCredentials: true,
         });
         console.log(response.data);
