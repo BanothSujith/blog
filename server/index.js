@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const connection = require("./connection/connection");
@@ -8,6 +9,10 @@ const authorized = require("./middleware/auth");
 dotenv.config();
 
 const app = express();
+app.use(cors({
+  origin: "https://blog-frontend-16yo.onrender.com",
+  credentials: true,
+}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -15,7 +20,7 @@ connection(process.env.MONGODB_URI);
 
 app.use("/",routes);
 
-app.get("/test", authorized,(req, res) => {
+app.get("/test",(req, res) => {
   res.send("Hello World!");
 });
 
