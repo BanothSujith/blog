@@ -5,6 +5,8 @@ import SkeletonPage from "./SkeltonHome";
 import { useDispatch, useSelector } from "react-redux";
 import { setVideos } from "../../reduxstore/slices";
 import { useNavigate } from "react-router";
+import dotenv from 'dotenv'; 
+dotenv.config();
 function Home() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
