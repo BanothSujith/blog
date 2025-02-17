@@ -11,9 +11,8 @@ export default defineConfig({
     host: true, 
     proxy: {
       "/api": {
-        target: process.env.VITE_APP_BACKEND_URI, 
-        changeOrigin: true,
-        secure: false,
+        target: process.env.VITE_APP_BACKEND_URI,
+        secure: true,
       },
     },
   },
