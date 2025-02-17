@@ -29,6 +29,7 @@ function Login() {
 
       const token = response.data.token;
       const user = response.data.user;
+      console.log("token", token)
       if (token && user) {
         Cookies.set('token', token, { expires:7 ,secure:true, sameSite: 'None', });
         Cookies.set('user', JSON.stringify(user),{expires:7 ,secure:true, sameSite: 'None',});
