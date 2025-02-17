@@ -24,11 +24,17 @@ async function handleLogin(req, res) {
     const { password:_, ...userWithoutPassword } = user._doc;
 console.log(userWithoutPassword)
     res.status(200)
-     .cookie('token', token, {
-     httpOnly: true,
-     secure: process.env.NODE_ENV === 'production', // Set to true only in production for HTTPS
-     sameSite: 'None', // Allows cross-site cookie usage
-     maxAge: 3600000, 
+      // .cookie('token', token, {
+      //   httpOnly: true,
+      //   secure: process.env.NODE_ENV === 'production',
+      //   sameSite: 'strict',
+      // })
+      .json({
+
+        user:userWithoutPassword,
+        token: token,
+
+      });
 
   } catch (error) {
     console.error('Error logging in user:', error);
