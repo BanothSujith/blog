@@ -15,7 +15,8 @@ function Home() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("/api/blogs", {
+        console.log(`${import.meta.env.VITE_APP_BACKEND_URI}/api/blogs`)
+        const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URI}/api/blogs`, {
           withCredentials: true,
         });
         const data = response.data.blogs;
