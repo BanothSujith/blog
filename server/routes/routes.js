@@ -23,7 +23,7 @@ router.post('/api/register',upload.fields([
 ]),handleRegister );
 
 router.post('/api/login',handleLogin );
-router.get('/api/blogs',authorized,handleBlog);
+router.get('/api/blogs',handleBlog);
 
 router.post('/api/video',authorized,  upload.fields([
     { name: 'coverImg', maxCount: 1 },
