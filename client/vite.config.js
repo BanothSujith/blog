@@ -11,7 +11,7 @@ export default defineConfig({
     host: true, 
     proxy: {
       "/api": {
-        target:https:"//blog-backend-hz1n.onrender.com",
+        target:"https://blog-backend-hz1n.onrender.com",
         changeOrigin: true,
       },
     },
