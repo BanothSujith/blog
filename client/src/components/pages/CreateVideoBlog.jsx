@@ -46,7 +46,7 @@ function CreateVideoBlog() {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/video", formData, {
+      const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URI}/api/video`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
