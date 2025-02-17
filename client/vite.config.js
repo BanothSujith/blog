@@ -8,13 +8,7 @@ dotenv.config();
 // https://vite.dev/config/
 export default defineConfig({
   server: {
-    host: true, 
-    proxy: {
-      "/api": {
-        target:"https://blog-backend-hz1n.onrender.com",
-        changeOrigin: true,
-      },
-    },
+    host: true,
   },
   plugins: [react()],
 });
