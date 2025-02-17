@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-  origin: "https://blog-frontend-16yo.onrender.com",
+  origin: "https://blog-front-end-gilt.vercel.app/",
   credentials: true,
 }));
 app.use(express.json());
