@@ -18,6 +18,7 @@ function Home() {
         const response = await axios.get("/api/blogs", {
           withCredentials: true,
         });
+        console.log(response.data);
         const data = response.data.blogs;
 
         dispatch(setVideos(data));
