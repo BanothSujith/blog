@@ -11,7 +11,7 @@ export default defineConfig({
     host: true, 
     proxy: {
       "/api": {
-        target: process.env.VITE_APP_BACKEND_URI,
+        target:https:"//blog-backend-hz1n.onrender.com",
         changeOrigin: true,
       },
     },
