@@ -30,8 +30,8 @@ function Login() {
       const token = response.data.token;
       const user = response.data.user;
       if (token && user) {
-        Cookies.set('token', token, { expires:7 , secure: true, sameSite: 'strict' });
-        Cookies.set('user', JSON.stringify(user),{ expires: 7 });
+        Cookies.set('token', token, { expires:7 ,secure:true, sameSite: 'None', });
+        Cookies.set('user', JSON.stringify(user),{expires:7 ,secure:true, sameSite: 'None',});
         setMessage('Login successful! Redirecting...');
         setTimeout(() => {
           navigate('/');
