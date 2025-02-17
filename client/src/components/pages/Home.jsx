@@ -5,7 +5,6 @@ import SkeletonPage from "./SkeltonHome";
 import { useDispatch, useSelector } from "react-redux";
 import { setVideos } from "../../reduxstore/slices";
 import { useNavigate } from "react-router";
-
 function Home() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -16,11 +15,9 @@ function Home() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        console.log('Backend URL:', process.env.VITE_APP_BACKEND_URI);
-        const response = await axios.get(`${process.env.VITE_APP_BACKEND_URI}/api/blogs`, {
+        const response = await axios.get("/api/blogs", {
           withCredentials: true,
         });
-        console.log(response.data);
         const data = response.data.blogs;
 
         dispatch(setVideos(data));
