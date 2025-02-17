@@ -1,6 +1,3 @@
-const Blog = require('../models/blog');
-const mongoose = require('mongoose');
-
 const handleSelectedVideo = async (req, res) => {
   const videoId = req.params.video;
   const userId = req.user?.id;
@@ -9,6 +6,7 @@ const handleSelectedVideo = async (req, res) => {
   }
 
   try {
+    // Increment the view count
     await Blog.findByIdAndUpdate(videoId, { $inc: { views: 1 } });
 
     const result = await Blog.aggregate([
@@ -21,31 +19,29 @@ const handleSelectedVideo = async (req, res) => {
           as: 'creator',
         },
       },
-      { 
-        $unwind: '$creator' 
+      { $unwind: '$creator' },
+      {
+        $addFields: {
+          // Ensure $creator.subscribers is an array
+          isSubscribed: {
+            $in: [userId, { $ifNull: ["$creator.subscribers", []] }]
+          },
+        },
       },
       {
-        $addFields:{
-          isSubscribed:{
-            $in:[userId,"$creator.subscribers"]
+        $addFields: {
+          isLiked: {
+            $in: [userId, "$likes"]
           }
         }
       },
       {
-        $addFields:{
-          isliked:{
-            $in:[userId,"$likes"]
+        $addFields: {
+          isUnliked: {
+            $in: [userId, "$unlikes"]
           }
         }
       },
-      {
-        $addFields:{
-          isUnliked:{
-            $in:[userId,"$unlikes"]
-          }
-        }
-      },
-     
       {
         $project: {
           _id: 1,
@@ -54,15 +50,15 @@ const handleSelectedVideo = async (req, res) => {
           videoUrl: 1,
           comments: 1,
           userName: '$creator.userName',
-          ownerId:'$creator._id',
+          ownerId: '$creator._id',
           profile: '$creator.profile',
           subscribersCount: { $size: '$creator.subscribers' },
           isSubscribed: 1,
-          isliked:1,
-          isUnliked:1,
-          likeCount:{$size:"$likes"},
-          dislikeCount:{$size:"$unlikes"},
-           },
+          isLiked: 1,
+          isUnliked: 1,
+          likeCount: { $size: "$likes" },
+          dislikeCount: { $size: "$unlikes" },
+        },
       },
     ]);
 
