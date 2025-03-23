@@ -34,20 +34,9 @@ function Login() {
       const user = response.data.user;
       console.log("token", token)
       if (token && user) {
-<<<<<<< HEAD
-        Cookies.set("token", token, {
-          expires: 7,
-          secure: true,
-          sameSite: "strict",
-        });
-        Cookies.set("user", JSON.stringify(user), { expires: 7 });
-        Message("Login successful!..." , "OK");
-        setMessage("Login successful! Redirecting...");
-=======
         Cookies.set('token', token, { expires:7 ,secure:true, sameSite: 'None', });
         Cookies.set('user', JSON.stringify(user),{expires:7 ,secure:true, sameSite: 'None',});
         setMessage('Login successful! Redirecting...');
->>>>>>> f99cec8fe4790ead98e59cad7025df7163a15d25
         setTimeout(() => {
           navigate("/");
         }, 1);

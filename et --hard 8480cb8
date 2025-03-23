@@ -1,0 +1,48 @@
+[33m928d001[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m addded chatbot manymore
+[33m8480cb8[m Add Google Generative AI dependency, implement chatbot functionality, and enhance message handling
+[33mf99cec8[m Update handleSelectedVideo.js
+[33m921aae9[m Update handleSelectedVideo.js
+[33m366c206[m Update handleSelectedVideo.js
+[33m2f5da32[m Update VideoPage.jsx
+[33maca52ce[m Update CreateVideoBlog.jsx
+[33m7ccaa23[m Update CreateImgBlog.jsx
+[33mda51e73[m Update Home.jsx
+[33m94c423f[m Update Home.jsx
+[33m2664546[m Update index.js
+[33m21f9f72[m Update index.js
+[33m7f6239c[m Update vite.config.js
+[33mae508aa[m Update Home.jsx
+[33m2ff96a7[m Update vite.config.js
+[33mf99a070[m Update Home.jsx
+[33m8b60962[m Update Home.jsx
+[33ma9e8d99[m Update Home.jsx
+[33m233629e[m Update vite.config.js
+[33m67ffddc[m Update vite.config.js
+[33mb1421aa[m Update vite.config.js
+[33m22d783b[m Update vite.config.js
+[33m6ec65af[m Update Home.jsx
+[33m063f2d3[m Update index.js
+[33md1a38ca[m Update routes.js
+[33m0e01e10[m Update vite.config.js
+[33m0fee102[m Update index.js
+[33md182196[m Update Login.jsx
+[33m9243de3[m Update Login.jsx
+[33m62507bd[m Update login.js
+[33m9b30e6a[m Update login.js
+[33mab673b3[m Update login.js
+[33m58afd33[m Removed node_modules from Git tracking
+[33m6e7b20a[m Add server.gitignore to exclude logs, build artifacts, and editor files
+[33md936d8d[m Delete server/.env
+[33ma8c3ceb[m Delete server/node_modules directory
+[33m1e09195[m Create .gitignore
+[33m8fa04d8[m Refactor blog and user models to include likes and unlikes arrays; implement subscription and like/unlike functionality; update styles and configurations.
+[33m2b3fa9e[m upadted dthe video route
+[33m1e2b8df[m created blog creation form upadted videopage
+[33m5756d96[m Merge remote-tracking branch 'origin/main'
+[33m7a5a98c[m Merge remote-tracking branch 'origin/main'
+[33m285bd16[m Fixed blog post issue
+[33m849fca0[m Update index.html
+[33mb8ea263[m Delete server/node_modules directory
+[33m675db0c[m update env
+[33m4c5d0c2[m first commit
+[33md80ff9b[m first commit

@@ -14,7 +14,7 @@ const imageFormats = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 function ChangeProfile() {
   const [newProfile, setNewProfile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0); // ✅ Upload Progress
+  const [uploadProgress, setUploadProgress] = useState(0); 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

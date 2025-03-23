@@ -16,7 +16,6 @@ const handleUnLikes = require("../controllers/handleUnlike");
 const handleGallery = require("../controllers/handleGallerys");
 const handleEditProfile = require("../controllers/handleEditProfile");
 const handlechatbot = require("../controllers/handlechatbot");
-// const authorized = require('../middleware/auth')
 
 router.post(
   "/api/register",
@@ -41,12 +40,8 @@ router.post(
   handleBlogPost
 );
 
-<<<<<<< HEAD
-router.post("/api/img", upload.single("coverImg"), authorized, handleImgPost);
-=======
 router.post('/api/login',handleLogin );
 router.get('/api/blogs',handleBlog);
->>>>>>> f99cec8fe4790ead98e59cad7025df7163a15d25
 
 router.post("/api/:video/comments", authorized, handleBlogPostComments);
 
@@ -61,11 +56,7 @@ router.post("/api/like/:blogId", authorized, handleLikes);
 router.post("/api/unlike/:blogId", authorized, handleUnLikes);
 
 router.get("/api/gallery",authorized, handleGallery);
-
-<<<<<<< HEAD
-router.post("/api/editprofile", upload.single("profileImage"),authorized,handleEditProfile);
+router.post("/api/editprofile",authorized, handleEditProfile);
 router.post("/api/chatbot",handlechatbot);
-module.exports = router;
-=======
+
 module.exports=router;
->>>>>>> f99cec8fe4790ead98e59cad7025df7163a15d25
