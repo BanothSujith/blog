@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const handleSelectedVideo = async (req, res) => {
   const videoId = req.params.video;
-  const userId = req.user?.id;
+  const userId = req.user?.id || [];
   if (!videoId) {
     return res.status(400).json({ message: "Invalid request" });
   }
@@ -27,21 +27,21 @@ const handleSelectedVideo = async (req, res) => {
       {
         $addFields:{
           isSubscribed:{
-            $in:[userId,"$creator.subscribers"]
+            $in:[userId,{$ifNull : ["$creator.subscribers", []]}]
           }
         }
       },
       {
         $addFields:{
           isliked:{
-            $in:[userId,"$likes"]
+            $in:[userId,{$ifNull:["$likes",[]]}]
           }
         }
       },
       {
         $addFields:{
           isUnliked:{
-            $in:[userId,"$unlikes"]
+            $in:[userId,{$ifNull:["$unlikes",[]]}]
           }
         }
       },
@@ -56,12 +56,12 @@ const handleSelectedVideo = async (req, res) => {
           userName: '$creator.userName',
           ownerId:'$creator._id',
           profile: '$creator.profile',
-          subscribersCount: { $size: '$creator.subscribers' },
+          subscribersCount: { $size:{$ifNull:['$creator.subscribers',[]]} },
           isSubscribed: 1,
           isliked:1,
           isUnliked:1,
-          likeCount:{$size:"$likes"},
-          dislikeCount:{$size:"$unlikes"},
+          likeCount:{$size:{$ifNull:["$likes", []]}},
+          dislikeCount:{$size:{$ifNull:["$unlikes",[]]}},
            },
       },
     ]);

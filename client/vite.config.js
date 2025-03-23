@@ -8,14 +8,7 @@ dotenv.config();
 // https://vite.dev/config/
 export default defineConfig({
   server: {
-    host: true, 
-    proxy: {
-      "/api": {
-        target: process.env.VITE_APP_BACKEND_URI, 
-        changeOrigin: true,
-        secure: false,
-      },
-    },
+    host: true,
   },
   plugins: [react()],
 });

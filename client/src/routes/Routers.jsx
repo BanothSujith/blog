@@ -12,6 +12,7 @@ import CreateImgBlog from '../components/pages/CreateImgBlog';
 import VideoPage from '../components/pages/VideoPage';
 import Profilepage from '../components/pages/Profile';
 import GalleryPage from '../components/pages/GalleryPage';
+import ChangeProfile from '../components/pages/ChangeProfile';
  
 function Routers() {
     const token = Cookies.get('token');
@@ -28,8 +29,9 @@ function Routers() {
       <Route path="/blogvideo" element={isAuthenticated ? <CreateVideoBlog /> : <Navigate to="/login" />} />
       <Route path="/blogimg" element={isAuthenticated ? <CreateImgBlog /> : <Navigate to="/login" />} />
       <Route path="/video/:video" element={<VideoPage/>} />
-      <Route path="/profile" element={<Profilepage/>}/>
+      <Route path="/user/:userprofile" element={<Profilepage/>}/>
       <Route path="/gallery" element={<GalleryPage/>} />
+      <Route path="/editprofile" element={<ChangeProfile/>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

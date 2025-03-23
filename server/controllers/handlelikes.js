@@ -28,7 +28,7 @@ const handleLikes = async (req, res) => {
       { new: true }
     );
     res.status(200).json({
-      message: hasLiked ? "Unliked" : "Liked",
+      message: hasLiked ? "Liked" : "undoLiked",
     });
 
   } catch (error) {

@@ -11,8 +11,9 @@ import defaultprofile from "/src/assets/defaultprofile.png";
 import { useNavigate } from "react-router";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import {setSettingsPageRequest} from '../../reduxstore/slices'
+import Message from "../../utility/Message";
 const menuItems = [
-  { name: "Profile", icon: <MdOutlineAccountCircle />, navigateTo: "/profile" },
+  { name: "Profile", icon: <MdOutlineAccountCircle /> },
   { name: "Create a New Blog", icon: <FiPlusSquare /> },
   { name: "Your Blogs", icon: <FaRegFolderOpen /> },
   { name: "Change Password", icon: <PiPassword /> },
@@ -28,9 +29,12 @@ function Settingspage() {
     Cookies.remove("token");
     Cookies.remove("user");
     setUser(null);
+    dispatch(setSettingsPageRequest());
+    Message("Logged Out Succesfully....!", "OK")
   };
 
   const handleClicks = (item, index) => {
+    if(index === 0) navigate(`/user/${user._id}`)
     if (item.navigateTo) {
       navigate(item.navigateTo);
       dispatch(setSettingsPageRequest())
@@ -48,12 +52,14 @@ function Settingspage() {
 
   return (
     <div className="w-full h-full bg-[var(--bg-card)] text-[var(--text)] py-4 flex flex-col gap-8 items-center">
-      <div className="relative flex flex-col items-center">
-        <img src={user?.profile || defaultprofile} alt="Profile" className="w-24 aspect-square p-[1px] bg-[var(--text)] rounded-full" />
-        <button className="absolute right-0 p-1 hover:scale-105 transition-transform">
+      <div className="flex flex-col items-center">
+      <div className="relative   ">
+        <img src={user?.profile || defaultprofile} alt="Profile" className="max-w-24 min-w-24 aspect-square p-[1px] bg-[var(--text)] rounded-full " />
+        <button className="absolute right-0 top-0 p-1 hover:scale-105 transition-all duration-75 ease-in-out" onClick={()=>{dispatch(setSettingsPageRequest(false)) ; navigate("/editprofile")}}>
           <FiEdit3 />
         </button>
-        <h2 className="p-2 text-xl font-semibold capitalize">{user?.userName || "Guest"}</h2>
+      </div>
+      <h2 className="p-2 text-xl font-semibold capitalize">{user?.userName || "Guest"}</h2>
       </div>
       <div className="flex flex-col w-full">
         {menuItems.map((item, index) => (
@@ -72,15 +78,15 @@ function Settingspage() {
             </button>
             {index === 1 && showBlogType && (
               <div className="flex flex-col gap-2 ">
-                <button className="px-4 py-2 rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in" onClick={()=>handleBlogPost("blogvideo")}>Video Blog</button>
-                <button className="px-4 py-2 rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in " onClick={()=>handleBlogPost("blogimg")}>Image Blog</button>
+                <button className="text-sm font-bold px-4 rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in" onClick={()=>handleBlogPost("blogvideo")}>Video Blog</button>
+                <button className="px-4 text-sm font-bold rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in " onClick={()=>handleBlogPost("blogimg")}>Image Blog</button>
               </div>
             )}
           </div>
         ))}
         <button
           className="w-full flex gap-6 items-center px-12 py-3 transition-all duration-75 ease-in hover:bg-[var(--bg-body)] hover:shadow-sm active:scale-95"
-          onClick={() => (user ? handleLogout() : navigate("/login"))}
+          onClick={() => (user ? handleLogout() : (navigate("/login") , dispatch(setSettingsPageRequest())))}
         >
           <span className="text-2xl">{user ? <IoLogOutOutline /> : <IoLogInOutline />}</span>
           <span className="text-lg capitalize font-semibold">{user ? "Logout" : "Login"}</span>

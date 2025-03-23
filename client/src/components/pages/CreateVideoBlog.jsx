@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDropzone } from "react-dropzone";
 import { BsCloudUpload } from "react-icons/bs";
+import Message from "../../utility/Message";
 
 const Spinner = () => (
-  <div className="w-full h-full flex justify-center items-center">
+  <div className="flex justify-center items-center h-20">
     <img
       src="/carloader.webp"
       alt="Loading..."
-      className="w-full h-full aspect-video object-fill"
+      className="w-16 h-16 animate-spin"
     />
   </div>
 );
-
+const videoFormats = ["video/mp4", "video/webm", "video/ogg", "video/mov", "video/mkv", "video/avi"];
+const imageFormats = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 function CreateVideoBlog() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -22,17 +25,15 @@ function CreateVideoBlog() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const cookie = document.cookie;
-    if (!cookie.includes("token")) {
+    if (!document.cookie.includes("token")) {
       navigate("/login");
     }
   }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!title || !content || !coverImg || !video) {
-      alert("All fields are required!");
+      Message("Please fill in all fields and upload both files.", "warning");
       return;
     }
 
@@ -46,115 +47,129 @@ function CreateVideoBlog() {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/video", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true, 
+      const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URI}/video`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
       });
 
       if (response.data.message === "Blog created successfully") {
-        alert("Blog created successfully!");
+        Message("Blog Posted Successfully!", "OK");
         setTitle("");
         setContent("");
         setCoverImg(null);
         setVideo(null);
       } else {
-        alert("Error creating blog");
+        Message("Error creating blog", "error");
       }
     } catch (error) {
       console.error(error);
-      alert("Error creating blog");
+      Message("Cannot upload the post, please try again!", "error");
     } finally {
       setLoading(false);
     }
   };
 
+  const { getRootProps: getVideoRootProps, getInputProps: getVideoInputProps,isVideoDragActive:isVideoDragActive } = useDropzone({
+    multiple: false,
+    onDrop: (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      if (file && videoFormats.includes(file.type)) {
+        setVideo(file);
+      } else {
+        Message("Only video files are allowed!", "warning");
+      }
+    },
+  });
+
+  const {
+    getRootProps: getThumbnailRootProps,
+    getInputProps: getThumbnailInputProps,
+    isDragActive: isThumbnailDragActive,
+  } = useDropzone({
+    multiple: false,
+    onDrop: (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      if(file && imageFormats.includes(file.type)) {
+        setCoverImg(file)
+      }else{
+        Message("Only image files are allowed!", "warning");
+      }
+
+      }
+  });
+
   return (
-    <div className="px-6 w-[45%] mx-auto h-screen border-3 bg-gray-400 overflow-auto">
-      <h1 className="flex justify-center font-bold text-3xl py-5">
-        ---UPLOAD VIDEO BLOG---
+    <div className="p-4 flex flex-col gap-8 items-center h-full overflow-auto">
+      <h1 className="text-3xl capitalize text-center font-bold text-[var(--text)] ">
+        upload video blog
       </h1>
-      {loading ? (
-        <Spinner />
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col h-full w-full">
-            {/* Select Video File */}
-            <div className="relative w-full">
-              <fieldset className="border-3 rounded-2xl mb-4">
-                <legend className="mx-5 text-xl font-semibold">
-                  Select Video File
-                </legend>
-                <input
-                  type="file"
-                  accept="video/*"
-                  required
-                  onChange={(e) => setVideo(e.target.files[0])}
-                  className="w-full h-50 font-bold text-xl px-36 py-20 text-gray-700"
-                />
-                <label
-                  className="flex justify-center items-center w-full text-lg font-semibold"
-                >
-                  <BsCloudUpload className="absolute top-[43%] left-[18%] text-4xl text-gray-700" />
-                </label>
-              </fieldset>
-            </div>
+      {loading && <Spinner />}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Video Upload */}
+        <div
+          {...getVideoRootProps()}
+          className={`w-[20rem] md:w-[32rem]  border-2 border-dashed rounded-xl p-16 text-center cursor-pointer transition ${
+            isVideoDragActive
+              ? "border-blue-500 bg-blue-100"
+              : "border-[var(--border)]  hover:bg-[var(--inputBg)]"
+          }`}
+        >
+          <BsCloudUpload className="text-4xl text-[var(--text)] mb-2 mx-auto opacity-25" />
+          <input {...getVideoInputProps()}  accept="video/*" />
+          {video ? (
+            <p className="text-[var(--text)]  font-bold">{video.name}</p>
+          ) : (
+            <p className="text-[var(--text)] font-bold opacity-20">
+              Drag & Drop or Click to upload video
+            </p>
+          )}
+        </div>
+        {/* Thumbnail Upload */}
 
-            {/* Thumbnail File */}
-            <div className="w-full relative">
-              <fieldset className="border-3 rounded-2xl mb-4">
-                <legend className="mx-5 text-xl font-semibold">
-                  Thumbnail File
-                </legend>
-                <input
-                  type="file"
-                  accept="image/*"
-                  required
-                  onChange={(e) => setCoverImg(e.target.files[0])}
-                  className="w-full h-20 font-bold text-xl px-36 py-4 text-gray-700"
-                />
-                <label className="flex justify-center items-center w-full text-lg font-semibold">
-                  <BsCloudUpload className="absolute top-[35%] left-[18%] text-4xl text-gray-700" />
-                </label>
-              </fieldset>
-            </div>
+        <div
+          {...getThumbnailRootProps()}
+          className={`w-[20rem] md:w-[32rem] border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition ${
+            isVideoDragActive
+              ? "border-blue-500 bg-blue-100"
+              : "border-[var(--border)]  hover:bg-[var(--inputBg)]"
+          }`}
+        >
+          <BsCloudUpload className="text-4xl text-[var(--text)] mb-2 mx-auto opacity-25" />
+          <input {...getThumbnailInputProps()} accept="image/*"/>
 
-            {/* Title */}
-            <fieldset className="border-3 rounded-2xl mb-4 p-2">
-              <legend className="mx-5 text-xl font-semibold">Title</legend>
-              <input
-                type="text"
-                required
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full h-15 text-lg outline-none px-5"
-              />
-            </fieldset>
+          {coverImg ? (
+            <p className="text-[var(--text)] font-bold ">{coverImg.name}</p>
+          ) : (
+            <p className="text-[var(--text)] font-bold opacity-20">
+              Drag & Drop or Click to upload thumbnail
+            </p>
+          )}
+        </div>
+        <div>
+          <label className=" text-xl tracking-wider text-[var(--text)] font-semibold">Title</label>
+          <input
+            type="text"
+            required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full p-3 border-[1.5px] border-[var(--border)] rounded-lg outline-none bg-transparent focus:bg-[var(--inputBg) text-[var(--text)]"
+          />
+        </div>
 
-            {/* Description */}
-            <fieldset className="border-3 rounded-xl mb-4 p-2">
-              <legend className="mx-5 text-xl font-semibold">Description</legend>
-              <textarea
-                required
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="w-full h-15 text-lg outline-none px-5"
-              />
-            </fieldset>
-
-            {/* Submit Button */}
-            <div className="py-2">
-              <button
-                type="submit"
-                className="w-full border-3 py-1 text-xl font-bold rounded-xl hover:bg-blue-500 hover:text-white"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </form>
-      )}
+        {/* Description */}
+        <div>
+          <label className="text-xl tracking-wider text-[var(--text)] font-semibold">Description</label>
+          <textarea
+            required
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="w-full p-3 border-[1.5px] text-[var(--text)] border-[var(--border)] outline-none bg-transparent rounded-lg "
+            rows="4"
+          ></textarea>
+        </div> 
+        <button type="submit" onClick={handleSubmit} className="w-full border border-[#511616]  text-[var(--text)] text-lg  font-semibold py-3 rounded-xl hover:bg-[var(--bg-card)] active:scale-95 transition-all duration-95 ease-linear">Upload
+          </button>
+      </form>
     </div>
   );
 }

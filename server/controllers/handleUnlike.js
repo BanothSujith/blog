@@ -30,7 +30,6 @@ const handleUnLikes = async (req, res) => {
     res.status(200).json({
       message: hasunLiked ? "Unliked" : "undoUnLiked"
     });
-    console.log(hasunLiked)
        
   } catch (error) {
     console.error("Error at handleUnLikes:", error);

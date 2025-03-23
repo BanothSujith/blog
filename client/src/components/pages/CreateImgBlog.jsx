@@ -1,36 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDropzone } from "react-dropzone";
+import { BsCloudUpload } from "react-icons/bs";
+import Message from "../../utility/Message";
 
 const Spinner = () => (
-  <div className="w-full h-full flex justify-center items-center">
+  <div className="flex justify-center items-center h-20">
     <img
       src="/carloader.webp"
       alt="Loading..."
-      className="w-full h-full aspect-video object-fill"
+      className="w-16 h-16 animate-spin"
     />
   </div>
 );
+
+const imageFormats = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 
 function CreateImgBlog() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [coverImg, setCoverImg] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleTitleChange = (e) => setTitle(e.target.value);
-  const handleContentChange = (e) => setContent(e.target.value);
-  const handleCoverImgChange = (e) => setCoverImg(e.target.files[0]);
-
-  const cookie = document.cookie;
-  if (!cookie.includes("token")) {
-    window.location.href = "/login";
-  }
+  useEffect(() => {
+    if (!document.cookie.includes("token")) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!title || !content || !coverImg ) {
-      alert("Please fill in all fields and upload both files.");
+    if (!title || !content || !coverImg) {
+      Message("Please fill in all fields and upload an image.", "warning");
       return;
     }
 
@@ -38,94 +41,110 @@ function CreateImgBlog() {
     formData.append("title", title);
     formData.append("content", content);
     formData.append("coverImg", coverImg);
-    
-    
+
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/img", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URI}/img`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
       });
 
       if (response.data.message === "Blog created successfully") {
-        alert("Blog created successfully!");
+        Message("Blog Posted Successfully!", "OK");
         setTitle("");
         setContent("");
-        setBlogType("");
         setCoverImg(null);
-        setVideo(null);
       } else {
-        alert("Error creating blog");
+        Message("Creating blog failed.", "error");
       }
     } catch (error) {
       console.error(error);
-      alert("Error creating blog");
+      Message("Cannot upload the post, please try again!", "error");
     } finally {
       setLoading(false);
     }
   };
 
+  const {
+    getRootProps: getThumbnailRootProps,
+    getInputProps: getThumbnailInputProps,
+    isDragActive: isThumbnailDragActive,
+  } = useDropzone({
+    multiple: false,
+    onDrop: (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      if (file && imageFormats.includes(file.type)) {
+        setCoverImg(file);
+      } else {
+        Message("Only image files are allowed!", "warning");
+      }
+    },
+  });
+
   return (
-    <div className="w-1/2 h-full mx-auto p-6 bg-white shadow-md rounded-md overflow-auto hidescroolbar">
-      <h2 className="text-2xl font-bold text-center mb-4">Create a New Blog Post</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2" htmlFor="title">
-            Title:
+    <div className="p-4 flex flex-col gap-8 items-center h-full overflow-auto">
+      <h1 className="text-3xl capitalize text-center font-bold text-[var(--text)]">
+        upload image blog
+      </h1>
+      {loading && <Spinner />}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Thumbnail Upload */}
+        <div
+          {...getThumbnailRootProps()}
+          className={`w-[20rem] md:w-[32rem] border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition ${
+            isThumbnailDragActive
+              ? "border-blue-500 bg-blue-100"
+              : "border-[var(--border)] hover:bg-[var(--inputBg)]"
+          }`}
+        >
+          <BsCloudUpload className="text-4xl text-[var(--text)] mb-2 mx-auto" />
+          <input {...getThumbnailInputProps()} accept="image/*" />
+
+          {coverImg ? (
+            <p className="text-[var(--text)] font-bold">{coverImg.name}</p>
+          ) : (
+            <p className="text-[var(--text)] font-bold opacity-20">
+              Drag & Drop or Click to upload image
+            </p>
+          )}
+        </div>
+
+        {/* Title */}
+        <div>
+          <label className="block text-xl tracking-wider text-[var(--text)] font-semibold">
+            Title
           </label>
           <input
             type="text"
-            id="title"
-            value={title}
-            onChange={handleTitleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full p-3 border-2 border-[var(--border)] rounded-lg outline-none bg-transparent focus:bg-[var(--inputBg)] text-[var(--text)]"
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2" htmlFor="content">
-            Content:
+        {/* Description */}
+        <div>
+          <label className="text-xl tracking-wider text-[var(--text)] font-semibold">
+            Description
           </label>
           <textarea
-            id="content"
+            required
             value={content}
-            onChange={handleContentChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            onChange={(e) => setContent(e.target.value)}
+            className="w-full p-3 border-2 text-[var(--text)] border-[var(--border)] outline-none bg-transparent rounded-lg"
             rows="4"
-            required
-          />
+          ></textarea>
         </div>
 
-       
-
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2" htmlFor="coverImg">
-            Cover Image:
-          </label>
-          <input
-            type="file"
-            id="coverImg"
-            onChange={handleCoverImgChange}
-            className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2" htmlFor="video">
-            Video:
-          </label>
-        </div>
-
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600"
-          disabled={loading}
+          onClick={handleSubmit}
+          className="w-full border border-[#511616] text-[var(--text)] text-lg font-semibold py-3 rounded-xl hover:bg-[var(--bg-card)] active:scale-95 transition-all duration-95 ease-linear"
         >
-          {loading ? <Spinner /> : "Submit Blog"}
+          Upload
         </button>
       </form>
     </div>

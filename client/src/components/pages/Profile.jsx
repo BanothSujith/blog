@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from "react";
-import Cookies from "js-cookie";
 import defaultprofile from "/src//assets/defaultprofile.png";
+import bgimgforprofile from "/src//assets//bgimgforprofile.png"
 import axios from "axios";
 import ProfileCards from "../../cards/ProfileCards";
+import { useParams } from "react-router";
 const categories = ["All", "Video", "Image"];
 
 const Profilepage = () => {
-  {
-    /*state for profilename*/
-  }
   const [profile, setProfile] = useState("");
   const [blogs, setBlogs] = useState(null);
   const [filteredBlogs, setFilteredBlogs] = useState("All");
+  const {userprofile} = useParams();
   // console.log(profile.blogs);
-  console.log(filteredBlogs);
   useEffect(() => {
-    const user = JSON.parse(Cookies.get("user") || "{}");
+    
 
     const fetchUserProfile = async () => {
-      const response = await axios.get(`/api/user/${user._id}`, {
+      const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URI}/user/${userprofile}`, {
         withCredentials: true,
       });
       setProfile(response.data.user);
@@ -36,11 +34,11 @@ const Profilepage = () => {
     <div className="h-full bg-[var(--bg-color)] overflow-auto">
       <div>
         {/*Background profile image*/}
-        <div className="relative ">
+        <div className="relative h-[20vh] lg:h-[40vh]">
           <img
-            src={profile.coverImg || ""}
-            alt="background"
-            className="w-full  h-[20vh] lg:h-[40vh] object-cover"
+            src={profile.coverImg || bgimgforprofile}
+            alt=""
+            className="w-full h-full   object-cover"
           />
           <div className="absolute -bottom-12 md:-bottom-32 left-4 aspect-square rounded-full">
             <img

@@ -10,7 +10,7 @@ async function handleRegister (req,res){
     }
     const userExists = await User.findOne({email:email} || {phoneNo:phoneNo})
 if(userExists){
-  // console.log('User already exists')
+  console.log('User already exists')
 
     return res.status(400).json({ error: 'User already exists' });
 }  
@@ -25,6 +25,7 @@ const coverimgUrl = await cloudinaryService(coverimg);
         user: { name, email, phoneNo },
       });
     } catch (error) {
+      console.error("error while registration ", error);
       res.status(500).json({ error: 'Failed to register user' });
     }
 }

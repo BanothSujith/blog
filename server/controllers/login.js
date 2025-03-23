@@ -22,7 +22,7 @@ async function handleLogin(req, res) {
 
     const token = setUser(user); 
     const { password:_, ...userWithoutPassword } = user._doc;
-console.log(userWithoutPassword)
+// console.log(userWithoutPassword)
     res.status(200)
       // .cookie('token', token, {
       //   httpOnly: true,

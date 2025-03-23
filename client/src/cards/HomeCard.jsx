@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 
 function HomeCard({ item }) {
@@ -9,7 +8,6 @@ function HomeCard({ item }) {
     >
       <img
         src={item.coverimgUrl}
-        alt={item.title}
         className="w-full max-h-[15rem] aspect-video  object-fill md:rounded-2xl "
       />
       <div className="flex flex-col px-2  ">

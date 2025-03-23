@@ -21,6 +21,8 @@ const videoPlayingSlice = createSlice({
     isVideoPlaying: false,
     videos: savedVideos, 
     isSettingsPageRequest : false,
+    message:"",
+    messageStatus:"",
   },
   reducers: {
     changeVideoPlaying: (state, action) => {
@@ -32,13 +34,19 @@ const videoPlayingSlice = createSlice({
     },
     setSettingsPageRequest: (state, _) => {
       state.isSettingsPageRequest = !state.isSettingsPageRequest
-    }
+    },
+    setMessage:(state,action)=>{
+      state.message = action.payload;
+    },
+    setMessageStatus:(state,action)=>{
+     state.messageStatus = action.payload;
+    },
   },
 });
 
 // Export Actions
 export const { changeTheme } = themeSlice.actions;
-export const { changeVideoPlaying, setVideos,setSettingsPageRequest } = videoPlayingSlice.actions;
+export const { changeVideoPlaying, setVideos,setSettingsPageRequest,setMessage,setMessageStatus } = videoPlayingSlice.actions;
 
 // Export Reducers
 export const themeReducer = themeSlice.reducer;

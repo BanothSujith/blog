@@ -18,7 +18,7 @@ const [coverImg,setCoverImg] = useState('');
     }
 
     try {
-      const response = await axios.post('/api/register', {
+      const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URI}/register`, {
         name,
         email,
         phoneNo,
@@ -32,7 +32,7 @@ const [coverImg,setCoverImg] = useState('');
         },
       });
     
-      console.log(response.data); 
+      console.log(response); 
     
       if (response.data.success) {
         setMessage('Registration successful! Redirecting to login...');
@@ -158,7 +158,6 @@ cover Image            </label>
             REGISTER
           </button>
         </form>
-        {message && <p className="text-red-500 text-center mt-3">{message}</p>}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const cors = require("cors");
 const dotenv = require("dotenv");
 const connection = require("./connection/connection");
 const routes = require("./routes/routes");
@@ -8,6 +8,24 @@ const authorized = require("./middleware/auth");
 dotenv.config();
 
 const app = express();
+const allowedOrigins = [
+  "https://blog-front-end-gilt.vercel.app",
+  "http://localhost:5173",
+  "http://192.168.65.34:5173/"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("Blocked by CORS:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 

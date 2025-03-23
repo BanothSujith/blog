@@ -1,49 +1,61 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { Link, useNavigate } from "react-router-dom";
+import Message from "../../utility/Message";
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (email === '' || password === '') {
-      setMessage('Email and password are required.');
+    if (email === "" || password === "") {
+      setMessage("Email and password are required.");
       return;
     }
 
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setMessage('Invalid email address.');
+      setMessage("Invalid email address.");
       return;
     }
 
     try {
       setLoading(true);
-      const response = await axios.post('/api/login', { email: email.toLowerCase(), password }, { withCredentials: true });
-
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_BACKEND_URI}/login`,
+        { email: email.toLowerCase(), password },
+        { withCredentials: true }
+      );
       const token = response.data.token;
       const user = response.data.user;
       if (token && user) {
-        Cookies.set('token', token, { expires:7 , secure: true, sameSite: 'strict' });
-        Cookies.set('user', JSON.stringify(user),{ expires: 7 });
-        setMessage('Login successful! Redirecting...');
+        Cookies.set("token", token, {
+          expires: 7,
+          secure: true,
+          sameSite: "strict",
+        });
+        Cookies.set("user", JSON.stringify(user), { expires: 7 });
+        Message("Login successful!..." , "OK");
+        setMessage("Login successful! Redirecting...");
         setTimeout(() => {
-          navigate('/');
+          navigate("/");
         }, 1);
       } else {
-        setMessage('Login successful but no token provided.');
+        setMessage("Login successful but no token provided.");
+        Message("Login successful but no token provided." , "warning");
       }
+
     } catch (error) {
-      setMessage(error.response?.data?.error || 'Something went wrong.');
+      setMessage(error.response?.data?.error || "Something went wrong.");
+       Message(error.response?.data?.error , "error");
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
@@ -77,14 +89,18 @@ function Login() {
             </label>
           </div>
 
-          <Link to="/register" className="text-blue-500 hover:underline">Create One?</Link>
+          <Link to="/register" className="text-blue-500 hover:underline">
+            Create One?
+          </Link>
 
           <button
             type="submit"
-            className={`w-full mb-5 mt-5 text-[18px] rounded bg-blue-500 py-2 hover:bg-blue-600 transition-colors duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full mb-5 mt-5 text-[18px] rounded bg-blue-500 py-2 hover:bg-blue-600 transition-colors duration-300 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             disabled={loading}
           >
-            {loading ? 'Logging in...' : 'LOGIN'}
+            {loading ? "Logging in..." : "LOGIN"}
           </button>
         </form>
         {message && <p className="text-red-500 text-center mt-3">{message}</p>}
