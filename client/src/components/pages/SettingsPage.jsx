@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { MdOutlineAccountCircle } from "react-icons/md";
 import { IoLogInOutline, IoLogOutOutline } from "react-icons/io5";
 import { FiEdit3, FiPlusSquare } from "react-icons/fi";
@@ -12,6 +12,8 @@ import { useNavigate } from "react-router";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import {setSettingsPageRequest} from '../../reduxstore/slices'
 import Message from "../../utility/Message";
+import { motion,AnimatePresence } from "framer-motion";
+
 const menuItems = [
   { name: "Profile", icon: <MdOutlineAccountCircle /> },
   { name: "Create a New Blog", icon: <FiPlusSquare /> },
@@ -70,12 +72,14 @@ function Settingspage() {
             >
               <span className="text-2xl">{item.icon}</span>
               <span className="text-lg capitalize font-semibold">{item.name}</span>
-              {index === 1 && (
+              {
+              index === 1 && (
                 <span className="text-2xl text-[var(--text)]">
                   {!showBlogType ? <FaAngleDown /> : <FaAngleUp />}
                 </span>
               )}
             </button>
+          
             {index === 1 && showBlogType && (
               <div className="flex flex-col gap-2 ">
                 <button className="text-sm font-bold px-4 rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in" onClick={()=>handleBlogPost("blogvideo")}>Video Blog</button>

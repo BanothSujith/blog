@@ -55,8 +55,14 @@ router.post("/api/like/:blogId", authorized, handleLikes);
 
 router.post("/api/unlike/:blogId", authorized, handleUnLikes);
 
+router.post("/api/img",authorized,upload.single("coverImg"),handleImgPost);
+
+router.post("/api/video",authorized,upload.fields([{name:"coverImg",maxCount:1},{name:"video",maxCount:1}]),handleBlogPost);
+
 router.get("/api/gallery",authorized, handleGallery);
-router.post("/api/editprofile",authorized, handleEditProfile);
+
+router.post("/api/editprofile",authorized,upload.single("profileImage"), handleEditProfile);
+
 router.post("/api/chatbot",handlechatbot);
 
 module.exports=router;

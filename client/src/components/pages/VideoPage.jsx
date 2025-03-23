@@ -31,7 +31,7 @@ function VideoPage() {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URI}/api/video/${video}`, {
+        const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URI}/video/${video}`, {
           withCredentials: true,
         });
         setVideoData(response.data.video);
@@ -40,8 +40,9 @@ function VideoPage() {
         setLinkedCount(response.data.video.likeCount)
         setIsunliked(response.data.video.isUnliked);
         setDislikedCount(response.data.video.dislikeCount)
+        Message(response.data.message);
       } catch (error) {
-        Message(error.response?.data?.error || "An error occurred","error");
+        Message(error.response?.data?.error || "An error occurred");
       } finally {
         setLoading(false);
       }
@@ -56,14 +57,14 @@ function VideoPage() {
     setCommentSendButton(true);
     try {
       const data = await axios.post(
-        `${import.meta.env.VITE_APP_BACKEND_URI}/${video}/comments`,
+        `/api/${video}/comments`,
         { comment },
         { withCredentials: true }
       );
 
       if (data.statusText === "Created") {
         setComment("");
-        Message("Comment sent successfully");
+        setMessage("Comment sent successfully");
       }
     } catch (error) {
       console.error("Failed to send comment:", error);
@@ -73,7 +74,7 @@ function VideoPage() {
   };
   const handleSubscribe = async () => {
     const response = await axios.post(
-      `${import.meta.env.VITE_APP_BACKEND_URI}/subscribe`,
+      "/api/subscribe",
       { channelId: videoData?.ownerId },
       { withCredentials: true }
     );
@@ -82,11 +83,11 @@ function VideoPage() {
     } else {
       setIsSubscribed(false);
     }
-    console.log(response.data.message);
+    // console.log(response.data.message);
   };
   const hanldelike = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URI}/like/${video}`, {}, { withCredentials: true });
+      const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URI}/like/${video}`,  {}, { withCredentials: true });
   
       if (response.data.message === "Liked") {
         setIsLiked(true);
@@ -101,7 +102,7 @@ function VideoPage() {
   
   const hanldeUnlike = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URI}/unlike/${video}`, {}, { withCredentials: true });
+      const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URI}/unlike/${video}`,{}, { withCredentials: true });
   console.log(response.data.message)
       if (response.data.message === "undoUnLiked") {
         setIsunliked(true);
@@ -113,10 +114,7 @@ function VideoPage() {
       console.error("Error unliking video:", error);
     }
   };
-  function handileNavigate(e){
-    console.log(e.target)
-    navigate(`/user/${videoData.ownerId}`)
-  }
+  
   return (
     <div className="w-full h-full overflow-auto">
       {/* Video Player */}
@@ -136,14 +134,14 @@ function VideoPage() {
 
           {/* User Info */}
           <div className="flex flex-col gap-4 md:flex-row w-full justify-between ">
-            <div className="flex items-start " onClick={(e)=>handileNavigate(e)}>
+            <div className="flex items-start ">
               <img
                 src={videoData?.profile ? videoData.profile : "/logosns.png"}
                 alt="profile"
                 className="h-12 w-12 rounded-full object-center object-cover aspect-square bg-gray-400"
               />
-              <p className="flex flex-col px-4 ">
-                <span className=" text-sm md:text-lg max-w-72 font-bold line-clamp-1">
+              <p className="flex flex-col px-4">
+                <span className=" text-sm md:text-lg  font-bold line-clamp-1">
                   {videoData?.userName || "Anonymous"}
                 </span>
                 <span className="text-sm font-semibold">
@@ -151,7 +149,7 @@ function VideoPage() {
                 </span>
               </p>
               <button
-                onClick={(e)=>{e.stopPropagation();handleSubscribe()}}
+                onClick={handleSubscribe}
                 className={`capitalize md:mx-4 px-4 w-fit py-1 border rounded-sm border-[#f1a6a6] `}
               >
                 {isSubscribed ? "subscribed" : "subscribe"}
@@ -168,8 +166,8 @@ function VideoPage() {
 
           {/* Video Description */}
           <div className="w-full h-28 my-4">
-            <fieldset className="w-full h-full border-2 border-[var(--text)] px-4 overflow-auto hidescroolbar rounded-md bg-gray-500/5 ">
-              <legend className="text-lg font-bold">Description</legend>
+            <fieldset className="w-full h-full border-2 border-[var(--text)] px-4 overflow-auto hidescroolbar rounded-md">
+              <legend className="text-xl">Description</legend>
               <p className="text-sm">
                 {videoData?.content || "No Description Available"}
               </p>
