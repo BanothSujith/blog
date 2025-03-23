@@ -1,5 +1,10 @@
 const express = require("express");
+<<<<<<< HEAD
 const cors = require("cors");
+=======
+const cors = require('cors');
+const mongoose = require("mongoose");
+>>>>>>> f99cec8fe4790ead98e59cad7025df7163a15d25
 const dotenv = require("dotenv");
 const connection = require("./connection/connection");
 const routes = require("./routes/routes");
@@ -8,6 +13,7 @@ const authorized = require("./middleware/auth");
 dotenv.config();
 
 const app = express();
+<<<<<<< HEAD
 const allowedOrigins = [
   "https://blog-front-end-gilt.vercel.app",
   "http://localhost:5173",
@@ -26,6 +32,12 @@ app.use(cors({
   credentials: true,
 }));
 
+=======
+app.use(cors({
+  origin: "https://blog-front-end-gilt.vercel.app",
+  credentials: true,
+}));
+>>>>>>> f99cec8fe4790ead98e59cad7025df7163a15d25
 app.use(express.json());
 app.use(cookieParser());
 
@@ -33,7 +45,7 @@ connection(process.env.MONGODB_URI);
 
 app.use("/",routes);
 
-app.get("/test", authorized,(req, res) => {
+app.get("/test",(req, res) => {
   res.send("Hello World!");
 });
 

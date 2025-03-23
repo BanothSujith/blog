@@ -20,10 +20,16 @@ function Home() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
+<<<<<<< HEAD
         const response = await axios.get(
           `${import.meta.env.VITE_APP_BACKEND_URI}/blogs?page=${page}&limit=12`,
           { withCredentials: true }
         );
+=======
+        const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URI}/api/blogs`, {
+          withCredentials: true,
+        });
+>>>>>>> f99cec8fe4790ead98e59cad7025df7163a15d25
         const data = response.data.blogs;
         if (data.length === 0) {
           setHasMore(false); 

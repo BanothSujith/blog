@@ -31,7 +31,11 @@ function VideoPage() {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
+<<<<<<< HEAD
         const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URI}/video/${video}`, {
+=======
+        const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URI}/api/video/${video}`, {
+>>>>>>> f99cec8fe4790ead98e59cad7025df7163a15d25
           withCredentials: true,
         });
         setVideoData(response.data.video);

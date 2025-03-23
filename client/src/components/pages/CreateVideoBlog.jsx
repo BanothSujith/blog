@@ -47,9 +47,17 @@ function CreateVideoBlog() {
     setLoading(true);
 
     try {
+<<<<<<< HEAD
       const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URI}/video`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
+=======
+      const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URI}/api/video`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true, 
+>>>>>>> f99cec8fe4790ead98e59cad7025df7163a15d25
       });
 
       if (response.data.message === "Blog created successfully") {

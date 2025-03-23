@@ -41,7 +41,12 @@ router.post(
   handleBlogPost
 );
 
+<<<<<<< HEAD
 router.post("/api/img", upload.single("coverImg"), authorized, handleImgPost);
+=======
+router.post('/api/login',handleLogin );
+router.get('/api/blogs',handleBlog);
+>>>>>>> f99cec8fe4790ead98e59cad7025df7163a15d25
 
 router.post("/api/:video/comments", authorized, handleBlogPostComments);
 
@@ -57,6 +62,10 @@ router.post("/api/unlike/:blogId", authorized, handleUnLikes);
 
 router.get("/api/gallery",authorized, handleGallery);
 
+<<<<<<< HEAD
 router.post("/api/editprofile", upload.single("profileImage"),authorized,handleEditProfile);
 router.post("/api/chatbot",handlechatbot);
 module.exports = router;
+=======
+module.exports=router;
+>>>>>>> f99cec8fe4790ead98e59cad7025df7163a15d25
