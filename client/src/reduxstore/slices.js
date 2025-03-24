@@ -23,6 +23,7 @@ const videoPlayingSlice = createSlice({
     isSettingsPageRequest : false,
     message:"",
     messageStatus:"",
+    isSearchPageOpen:false,
   },
   reducers: {
     changeVideoPlaying: (state, action) => {
@@ -41,12 +42,14 @@ const videoPlayingSlice = createSlice({
     setMessageStatus:(state,action)=>{
      state.messageStatus = action.payload;
     },
+    setSearchPageRequest:(state,_)=>{
+      state.isSearchPageOpen = !isSearchPageOpen;
   },
-});
+}});
 
 // Export Actions
 export const { changeTheme } = themeSlice.actions;
-export const { changeVideoPlaying, setVideos,setSettingsPageRequest,setMessage,setMessageStatus } = videoPlayingSlice.actions;
+export const { changeVideoPlaying, setVideos,setSettingsPageRequest,setMessage,setMessageStatus,setSearchPageRequest } = videoPlayingSlice.actions;
 
 // Export Reducers
 export const themeReducer = themeSlice.reducer;

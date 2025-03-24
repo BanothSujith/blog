@@ -66,7 +66,7 @@ const Profilepage = () => {
           {categories.map((category, index) => (
             <button
               key={index}
-              className={` text-[var(--text)] font-bold px-4 py-2 ${ category === filteredBlogs ? "bg-[var(--smallcard)]":'bg-[var(--bg-color)]'}  flex-1 transition duration-500 ease-in-out transform`}
+              className={` text-[var(--text)] font-bold px-4 py-2 ${ category === filteredBlogs ? "bg-[var(--smallcard)]":'bg-[var(--bg-color)]'}  flex-1 transition duration-500 ease-in-out `}
               onClick={() => handleFilterBlogs(category)}
             >
               {category}

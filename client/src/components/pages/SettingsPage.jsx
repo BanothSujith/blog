@@ -53,7 +53,7 @@ function Settingspage() {
   }
 
   return (
-    <div className="w-full h-full bg-[var(--bg-card)] text-[var(--text)] py-4 flex flex-col gap-8 items-center">
+    <div className="w-full h-full bg-[var(--bg-card)] text-[var(--text)] py-4 flex flex-col gap-8 items-center transition-all duration-500 ease-linear">
       <div className="flex flex-col items-center">
       <div className="relative   ">
         <img src={user?.profile || defaultprofile} alt="Profile" className="max-w-24 min-w-24 aspect-square p-[1px] bg-[var(--text)] rounded-full " />
@@ -74,18 +74,25 @@ function Settingspage() {
               <span className="text-lg capitalize font-semibold">{item.name}</span>
               {
               index === 1 && (
-                <span className="text-2xl text-[var(--text)]">
-                  {!showBlogType ? <FaAngleDown /> : <FaAngleUp />}
+                <span className={`text-2xl text-[var(--text)] ${showBlogType? "rotate-180" : ""} transition-all duration-75 ease-in-out`}>
+                  <FaAngleDown />
                 </span>
               )}
             </button>
-          
+          <AnimatePresence>
             {index === 1 && showBlogType && (
-              <div className="flex flex-col gap-2 ">
+              <motion.div
+              initial={{scaleY:0}}
+              animate={{scaleY:1}}
+              exit={{scaleY:0}}
+              transition={{duration:0.3, ease:"easeInOut"}}
+              style={{transformOrigin:"top"}}
+              className="flex flex-col gap-2 ">
                 <button className="text-sm font-bold px-4 rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in" onClick={()=>handleBlogPost("blogvideo")}>Video Blog</button>
                 <button className="px-4 text-sm font-bold rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in " onClick={()=>handleBlogPost("blogimg")}>Image Blog</button>
-              </div>
+              </motion.div>
             )}
+            </AnimatePresence>
           </div>
         ))}
         <button

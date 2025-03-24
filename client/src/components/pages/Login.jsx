@@ -32,26 +32,32 @@ function Login() {
       );
       const token = response.data.token;
       const user = response.data.user;
-      console.log("token", token)
+      console.log("token", token);
       if (token && user) {
-        Cookies.set('token', token, { expires:7 ,secure:true, sameSite: 'None', });
-        Cookies.set('user', JSON.stringify(user),{expires:7 ,secure:true, sameSite: 'None',});
-        setMessage('Login successful! Redirecting...');
+        Cookies.set("token", token, {
+          expires: 7,
+          secure: true,
+          sameSite: "None",
+        });
+        Cookies.set("user", JSON.stringify(user), {
+          expires: 7,
+          secure: true,
+          sameSite: "None",
+        });
+        setMessage("Login successful! Redirecting...");
         setTimeout(() => {
           navigate("/");
         }, 1);
       } else {
         setMessage("Login successful but no token provided.");
-        Message("Login successful but no token provided." , "warning");
+        Message("Login successful but no token provided.", "warning");
       }
-
     } catch (error) {
       setMessage(error.response?.data?.error || "Something went wrong.");
-       Message(error.response?.data?.error , "error");
+      Message(error.response?.data?.error, "error");
     } finally {
       setLoading(false);
     }
-
   };
 
   return (

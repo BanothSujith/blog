@@ -8,10 +8,17 @@ import Routers from "./routes/Routers";
 import { setSettingsPageRequest } from "./reduxstore/slices";
 import Message from "./components/pages/Message";
 import { BsChatTextFill } from "react-icons/bs";
+import SearchPageForMObile from "./components/pages/SearchPageForMObile";
 
 const Settingspage = lazy(() => import("./components/pages/SettingsPage"));
 const ChatBot = lazy(() => import("./components/pages/ChatBot"));
-const hideNav = ["/login", "/register", "/blogvideo", "/blogimg", "/editprofile"];
+const hideNav = [
+  "/login",
+  "/register",
+  "/blogvideo",
+  "/blogimg",
+  "/editprofile",
+];
 
 function Layout() {
   const location = useLocation();
@@ -21,9 +28,14 @@ function Layout() {
   );
   const dispatch = useDispatch();
   const isMessage = useSelector((state) => state.videoPlaying.message);
-  const messageStatus = useSelector((state) => state.videoPlaying.messageStatus);
+  const messageStatus = useSelector(
+    (state) => state.videoPlaying.messageStatus
+  );
+  const isSearchPageOpen = useSelector(
+    (state) => state.videoPlaying.isSearchPageOpen
+  );
   const [chatBot, setChatBot] = useState(false);
-  
+
   const settingsRef = useRef(null);
   const chatBotRef = useRef(null);
 
@@ -56,14 +68,20 @@ function Layout() {
   }, [isSettingspageOpen, chatBot, dispatch]);
 
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden bg-[var(--bg-body)] transition-all duration-500 ease-linear">
+    <div className="relative w-full h-screen flex flex-col overflow-hidden bg-[var(--bg-body)] transition-all duration-500 ease-linear">
       <div className="w-full">{!hideLayout && <Navbar />}</div>
 
       <div className="h-full flex flex-col lg:flex-row-reverse justify-center lg:justify-end items-center">
         <div className="relative w-full h-full md:pb-16">
           <Routers />
 
-          <Suspense fallback={<div className="flex items-center justify-center h-full">Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-full">
+                Loading...
+              </div>
+            }
+          >
             <AnimatePresence>
               {isSettingspageOpen && (
                 <motion.div
@@ -80,54 +98,63 @@ function Layout() {
             </AnimatePresence>
           </Suspense>
         </div>
-        <div className="w-full lg:w-fit fixed bottom-0 lg:static">{!hideLayout && <SideNavBar />}</div>
+        <div className="w-full lg:w-fit fixed bottom-0 lg:static">
+          {!hideLayout && <SideNavBar />}
+        </div>
       </div>
 
       <AnimatePresence>
         {isMessage && (
           <motion.div
-            initial={{ x: "100%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: "100%", opacity: 0 }}
+            initial={{ y: "-100%", x: "-50%", opacity: 0 }}
+            animate={{ y: 0, x: "-50%", opacity: 1 }}
+            exit={{ y: "-100%", x: "-50%", opacity: 1 }}
             transition={{ duration: 0.3, ease: "linear" }}
-            className="fixed bottom-12 right-4 lg:bottom-3 lg:right-10"
+            className="fixed top-1 left-1/2 "
           >
             <Message message={isMessage} type={messageStatus} />
           </motion.div>
         )}
+      </AnimatePresence>
 
-        {/* ✅ Chatbot Button */}
-        {!isSettingspageOpen && !hideLayout && (
-          <motion.button
-            className="text-5xl absolute bottom-0 right-10 chatbot-button"
-            initial={{ y: 0, opacity: 0 }}
-            animate={{ y: -50, opacity: 1 }}
-            transition={{ duration:.3, ease: "linear" }}
-            onClick={() => setChatBot((prev) => !prev)}
-          >
-            <BsChatTextFill className="text-[#4c38bb]" />
-          </motion.button>
-        )}
+      {/* ✅ Chatbot Button */}
+      {!isSettingspageOpen && !hideLayout && (
+        <motion.button
+          className="text-5xl absolute bottom-0 right-5 chatbot-button"
+          initial={{ y: 0, opacity: 0 }}
+          animate={{ y: -90, opacity: 1 }}
+          transition={{ duration: 0.3, ease: "linear" }}
+          onClick={() => setChatBot((prev) => !prev)}
+        >
+          <BsChatTextFill className="text-[#4c38bb]" />
+        </motion.button>
+      )}
 
-        {/* ✅ Chatbot Popup */}
-        <Suspense fallback={<div className="flex items-center justify-center h-full">Loading...</div>}>
+      {/* ✅ Chatbot Popup */}
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-full">
+            Loading...
+          </div>
+        }
+      >
         <AnimatePresence>
           {chatBot && (
             <motion.div
               ref={chatBotRef}
-              initial={{ x:15,scale: 0 }}
-              animate={{ x:0,scale: 1 }}
-              exit={{x:15,scale: 0 }}
+              initial={{ x: 15, scale: 0 }}
+              animate={{ x: 0, scale: 1 }}
+              exit={{ x: 15, scale: 0 }}
               style={{ transformOrigin: "bottom right" }}
-              transition={{ duration: .3, ease: "linear" }}
+              transition={{ duration: 0.3, ease: "linear" }}
               className="absolute bottom-12 right-24 w-96 min-h-96 rounded-xl overflow-hidden shadow-lg"
             >
               <ChatBot />
             </motion.div>
           )}
         </AnimatePresence>
-        </Suspense>
-      </AnimatePresence>
+      </Suspense>
+      {isSearchPageOpen && <SearchPageForMObile />}
     </div>
   );
 }

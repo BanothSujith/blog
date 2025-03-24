@@ -65,8 +65,8 @@ function Navbar() {
             onSubmit={handleSearch}
             className="relative flex items-center md:bg-[var(--smallcard)] gap-1 p-1 rounded-md h-full"
           >
-            <button type="submit">
-              <IoSearchOutline className="text-white md:text-[var(--text)] mt-[2px] text-3xl" />
+            <button type="submit" >
+              <IoSearchOutline className="text-[var(--text)] mt-[2px] text-3xl" />
             </button>
             <input
               type="search"
@@ -141,11 +141,11 @@ function Navbar() {
             onClick={handleSettingsPage}
           >
             <button
-              className={`text-[var(--text)] h-full flex justify-center items-center px-[2px]  gap-1 rounded-full py-[2px] transition-all duration-1000 ease-linear`}
+              className={`text-[var(--text)] h-full flex justify-center items-center px-[2px]  rounded-full py-[2px] transition-all duration-1000 ease-linear`}
             >
               <motion.div
                 className="relative h-full"
-                animate={{x: settingspageopen ? moveicons : 0 }} 
+                animate={{x: settingspageopen ? "90%" : 0 ,rotate: settingspageopen ? 360 : 0 }} 
                 transition={{ duration: 0.5, ease: "easeInOut" }}
               >
                 <img
@@ -162,10 +162,10 @@ function Navbar() {
               </motion.div>
               <motion.div
                 className="relative h-full"
-                animate={{ x: settingspageopen ? -moveicons : 0 }} 
+                animate={{ x: settingspageopen ? "-120%"  : 0 , rotate: settingspageopen ? -180 : 0 }} 
                 transition={{ duration: 0.5, ease: "easeInOut" }}
               >
-              <IoSettingsOutline className="flex items-center text-xl md:text-2xl h-full" />
+              <IoSettingsOutline className={`flex items-center text-xl md:text-2xl h-full ${settingspageopen ? "rotate-180": ""}  transfr `} />
               </motion.div>
             </button>
           </div>
