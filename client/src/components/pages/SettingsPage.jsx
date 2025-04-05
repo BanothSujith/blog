@@ -42,9 +42,10 @@ function Settingspage() {
 
   const handleClicks = (item, index) => {
     if (index === 0) navigate(`/user/${user._id}`);
+    dispatch(setSettingsPageRequest());
+
     if (item.navigateTo) {
       navigate(item.navigateTo);
-      dispatch(setSettingsPageRequest());
     }
     if (index === 1) {
       setShowBlogType(!showBlogType);
