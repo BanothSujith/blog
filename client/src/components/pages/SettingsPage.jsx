@@ -41,9 +41,9 @@ function Settingspage() {
   };
 
   const handleClicks = (item, index) => {
-    if (index === 0) navigate(`/user/${user._id}`);
-    dispatch(setSettingsPageRequest());
-
+    if (index === 0){    dispatch(setSettingsPageRequest());
+      navigate(`/user/${user._id}`);
+    }
     if (item.navigateTo) {
       navigate(item.navigateTo);
     }
