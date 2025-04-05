@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const authorized = (req, res, next) => {
   const token = req.cookies.token 
-  // console.log(token)
+  console.log(token)
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized, token not provided.' });
   }
