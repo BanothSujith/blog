@@ -16,6 +16,7 @@ const handleUnLikes = require("../controllers/handleUnlike");
 const handleGallery = require("../controllers/handleGallerys");
 const handleEditProfile = require("../controllers/handleEditProfile");
 const handlechatbot = require("../controllers/handlechatbot");
+const handlePassWordChange = require("../controllers/handlePaswordChange");
 
 router.post(
   "/api/register",
@@ -45,7 +46,7 @@ router.get('/api/blogs',handleBlog);
 
 router.post("/api/:video/comments", authorized, handleBlogPostComments);
 
-router.get("/api/video/:video", handleSelectedVideo);
+router.get("/api/video/:video",authorized, handleSelectedVideo);
 
 router.get("/api/user/:userId", authorized, handleUserDetails);
 
@@ -64,5 +65,7 @@ router.get("/api/gallery",authorized, handleGallery);
 router.post("/api/editprofile",authorized,upload.single("profileImage"), handleEditProfile);
 
 router.post("/api/chatbot",handlechatbot);
+
+router.post("/api/changepassword",authorized,handlePassWordChange);
 
 module.exports=router;

@@ -86,7 +86,7 @@ const Profilepage = () => {
               (item) =>
                 filteredBlogs === "All" || item.blogtype === filteredBlogs.toLocaleLowerCase()
             )
-            .map((blog) => <ProfileCards key={blog._id} blog={blog} />)
+            .map((blog) => <ProfileCards key={blog._id} blog={blog}  />)
         ) : (
           <p>No blogs available</p>
         )}

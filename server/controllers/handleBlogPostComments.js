@@ -18,7 +18,7 @@ const handleBlogPostComments = async (req, res) => {
     }
 
     const user = await User.findById(id).select("userName");
-    console.log(typeof(user.userName) , user.userName);
+    // console.log(typeof(user.userName) , user.userName);
     if (!user) {
       return res.status(404).json({ message: "User does not exist." });
     }

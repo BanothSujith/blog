@@ -2,32 +2,32 @@ const Blog = require("../models/blog");
 
 async function handleBlog(req, res) {
   try {
-    const searchQuery = req.query.q || ""; 
-    const page = parseInt(req.query.page) || 1; 
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit; 
+    const searchQuery = req.query.q?.trim() || "";
+    let page = parseInt(req.query.page, 10) || 1;
+    let limit = parseInt(req.query.limit, 10) || 10;
 
-    let filter = {};
+    page = Math.max(page, 1);
+    limit = Math.min(Math.max(limit, 1), 10);
 
-    if (searchQuery.trim()) {
+    const skip = (page - 1) * limit;
+
+    let filter = { blogtype: "video" }; // Always only video blogs
+
+    if (searchQuery) {
       const words = searchQuery.split(" ").filter(Boolean);
-
-      filter = {
-        $or: words.flatMap((word) => [
-          { title: { $regex: word, $options: "i" } },
-          { content: { $regex: word, $options: "i" } },
-        ]),
-      };
+      filter.$or = words.flatMap((word) => [
+        { title: { $regex: word, $options: "i" } },
+        { content: { $regex: word, $options: "i" } },
+      ]);
     }
 
-    // ✅ Apply pagination using `.skip(skip).limit(limit)`
     const blogs = await Blog.find(filter)
       .populate("createdBy", "profile userName")
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .lean();
 
-    // ✅ Count total matching blogs
     const totalBlogs = await Blog.countDocuments(filter);
 
     res.status(200).json({

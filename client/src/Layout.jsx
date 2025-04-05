@@ -5,10 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Navbar from "./components/Navbar";
 import SideNavBar from "./components/SideNavBar";
 import Routers from "./routes/Routers";
-import { setSettingsPageRequest } from "./reduxstore/slices";
+import { setChatBot, setSettingsPageRequest } from "./reduxstore/slices";
 import Message from "./components/pages/Message";
 import { BsChatTextFill } from "react-icons/bs";
-import SearchPageForMObile from "./components/pages/SearchPageForMObile";
 
 const Settingspage = lazy(() => import("./components/pages/SettingsPage"));
 const ChatBot = lazy(() => import("./components/pages/ChatBot"));
@@ -18,6 +17,7 @@ const hideNav = [
   "/blogvideo",
   "/blogimg",
   "/editprofile",
+  "/changepassword",
 ];
 
 function Layout() {
@@ -34,10 +34,14 @@ function Layout() {
   const isSearchPageOpen = useSelector(
     (state) => state.videoPlaying.isSearchPageOpen
   );
-  const [chatBot, setChatBot] = useState(false);
+  const chatBot = useSelector((state)=> state.videoPlaying.chatBot);
+  // const [chatBot, setChatBot] = useState(false);
 
   const settingsRef = useRef(null);
   const chatBotRef = useRef(null);
+
+    const [fullScreen, setFullScreen] = useState(false);
+   const [isMobile, setIsMobile] = useState(window.innerWidth>500);
 
   // ✅ Unified function to handle clicks outside both chatbot & settings
   useEffect(() => {
@@ -54,7 +58,7 @@ function Layout() {
         !chatBotRef.current.contains(event.target) &&
         !event.target.closest(".chatbot-button")
       ) {
-        setChatBot(false);
+        dispatch(setChatBot());
       }
     };
 
@@ -66,13 +70,13 @@ function Layout() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSettingspageOpen, chatBot, dispatch]);
-
+  
   return (
     <div className="relative w-full h-screen flex flex-col overflow-hidden bg-[var(--bg-body)] transition-all duration-500 ease-linear">
       <div className="w-full">{!hideLayout && <Navbar />}</div>
 
       <div className="h-full flex flex-col lg:flex-row-reverse justify-center lg:justify-end items-center">
-        <div className="relative w-full h-full md:pb-16">
+        <div className="relative w-full h-full ">
           <Routers />
 
           <Suspense
@@ -118,13 +122,13 @@ function Layout() {
       </AnimatePresence>
 
       {/* ✅ Chatbot Button */}
-      {!isSettingspageOpen && !hideLayout && (
+      {!isSettingspageOpen && !hideLayout &&isMobile  && (
         <motion.button
           className="text-5xl absolute bottom-0 right-5 chatbot-button"
           initial={{ y: 0, opacity: 0 }}
           animate={{ y: -90, opacity: 1 }}
           transition={{ duration: 0.3, ease: "linear" }}
-          onClick={() => setChatBot((prev) => !prev)}
+          onClick={() =>{ dispatch(setChatBot())}}
         >
           <BsChatTextFill className="text-[#4c38bb]" />
         </motion.button>
@@ -147,9 +151,9 @@ function Layout() {
               exit={{ x: 15, scale: 0 }}
               style={{ transformOrigin: "bottom right" }}
               transition={{ duration: 0.3, ease: "linear" }}
-              className="absolute bottom-12 right-24 w-96 min-h-96 rounded-xl overflow-hidden shadow-lg"
+              className={`absolute  ${fullScreen || !isMobile? "w-full h-full bottom-0 " :" w-96 min-h-96  bottom-12 right-24 rounded-xl"  } transition-all  ease-linear  overflow-hidden shadow-lg`}
             >
-              <ChatBot />
+              <ChatBot fullScreen={fullScreen} setFullScreen={setFullScreen} />
             </motion.div>
           )}
         </AnimatePresence>
