@@ -17,6 +17,7 @@ const handleGallery = require("../controllers/handleGallerys");
 const handleEditProfile = require("../controllers/handleEditProfile");
 const handlechatbot = require("../controllers/handlechatbot");
 const handlePassWordChange = require("../controllers/handlePaswordChange");
+const handleLogout = require("../controllers/handleLogout");
 
 router.post(
   "/api/register",
@@ -68,4 +69,5 @@ router.post("/api/chatbot",handlechatbot);
 
 router.post("/api/changepassword",authorized,handlePassWordChange);
 
+router.post("/api/logout", authorized, handleLogout);
 module.exports=router;

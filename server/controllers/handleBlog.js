@@ -11,24 +11,62 @@ async function handleBlog(req, res) {
 
     const skip = (page - 1) * limit;
 
-    let filter = { blogtype: "video" }; // Always only video blogs
+    const matchStage = { blogtype: "video" };
 
-    if (searchQuery) {
-      const words = searchQuery.split(" ").filter(Boolean);
-      filter.$or = words.flatMap((word) => [
+    const words = searchQuery.split(" ").filter(Boolean);
+    if (words.length) {
+      matchStage.$or = words.flatMap((word) => [
         { title: { $regex: word, $options: "i" } },
         { content: { $regex: word, $options: "i" } },
+        { "createdByData.userName": { $regex: word, $options: "i" } },
       ]);
     }
 
-    const blogs = await Blog.find(filter)
-      .populate("createdBy", "profile userName")
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .lean();
+    const blogs = await Blog.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "createdByData",
+        },
+      },
+      { $unwind: "$createdByData" },
+      { $match: matchStage },
+      {
+        $sort: { createdAt: -1 },
+      },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          createdAt: 1,
+          createdBy: "$createdByData._id",
+          userName: "$createdByData.userName",
+          profile: "$createdByData.profile",
+          coverimgUrl: 1,
+          blogtype: 1,
+        },
+      },
+    ]);
 
-    const totalBlogs = await Blog.countDocuments(filter);
+    const totalBlogsData = await Blog.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "createdByData",
+        },
+      },
+      { $unwind: "$createdByData" },
+      { $match: matchStage },
+      { $count: "total" },
+    ]);
+
+    const totalBlogs = totalBlogsData[0]?.total || 0;
 
     res.status(200).json({
       blogs,

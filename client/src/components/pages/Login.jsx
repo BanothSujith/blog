@@ -29,9 +29,11 @@ function Login() {
         { email: email.toLowerCase(), password },
         { withCredentials: true }
       );
+      console.log(response.data);
       // const token = response.data.token;
       // const user = response.data.user;
-      if (response.data?.message === "Login successful") {
+      if (response.data?.message === "Login successful" && response.data?.user) {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
         // Cookies.set("token", token, {
         //   expires: 7,
         //   secure: true,

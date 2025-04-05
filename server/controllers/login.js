@@ -19,25 +19,22 @@ async function handleLogin(req, res) {
     if (!isMatch) {
       return res.status(400).json({ error: 'Invalid email or password' });
     }
-
     const token = setUser(user); 
-    const { password:_, ...userWithoutPassword } = user._doc;
-// console.log(userWithoutPassword)
+    const filteredUser = {
+      _id: user._id,
+      userName: user.userName,
+      profile: user.profile,
+    };
+console.log(filteredUser)
 res
   .status(200)
   .cookie("token", token, {
-    httpOnly: false,
+    httpOnly: true,
     secure: true,
     sameSite: "None",
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
   })
-  .cookie("user", JSON.stringify(userWithoutPassword), {
-    httpOnly: false, // so frontend can read
-    secure: true,
-    sameSite: "None",
-    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-  })
-  .json({ message: "Login successful" });
+  .json({ message: "Login successful",user:filteredUser });
 
 
   } catch (error) {

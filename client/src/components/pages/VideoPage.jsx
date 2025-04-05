@@ -17,7 +17,7 @@ import Message from "../../utility/Message";
 import { AnimatePresence, motion } from "framer-motion";
 
 function VideoPage() {
-  const location = useLocation();
+  // const location = useLocation();
   const { video } = useParams();
   const navigate = useNavigate();
   const [videoData, setVideoData] = useState(null);
@@ -108,7 +108,8 @@ function VideoPage() {
         setIsunliked(response.data.video.isUnliked);
         setDislikedCount(response.data.video.dislikeCount);
       } catch (error) {
-        Message(error.response?.data?.error || "An error occurred");
+        Message(error.response?.data?.error || "An error occurred", "warning");
+        navigate("/login");
       }
     };
 
@@ -141,12 +142,15 @@ function VideoPage() {
     }
   };
   const handleSubscribe = async () => {
-    if (!Cookies.get("token")) return navigate("/login");
     const response = await axios.post(
       ` ${import.meta.env.VITE_APP_BACKEND_URI}/subscribe`,
       { channelId: videoData?.ownerId },
       { withCredentials: true }
     );
+    if(response.data.error === "Unauthorized, token not provided." || response.data.error === 'Invalid token.'){
+      Message('Please login to subscribe', 'Error');
+      return navigate('/login');
+    } 
     if (response.data.message === "Subscribed successfully") {
       setIsSubscribed(true);
       setVideoData((prev) => ({
