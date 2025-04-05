@@ -1,6 +1,7 @@
 const Blog = require("../models/blog");
 
 async function handleGallery(req, res) {
+  const userId = req.user?.id;
   try {
     const searchQuery = req.query.q?.trim() || "";
     const words = searchQuery.split(" ").filter(Boolean);
@@ -18,11 +19,39 @@ async function handleGallery(req, res) {
     const galleryBlogs = await Blog.aggregate([
       {
         $lookup: {
-          from: "users", // collection name in MongoDB (not model name)
+          from: "users", 
           localField: "createdBy",
           foreignField: "_id",
           as: "ownerData",
         },
+      },
+      {
+        $addFields:{
+          isLiked: {
+            $in: [
+              userId,
+              {
+                $map: {
+                  input: { $ifNull: ["$likes", []] },
+                  as: "like",
+                  in: { $toString: "$$like" },
+                },
+              },
+            ],
+          },
+          isUnliked: {
+            $in: [
+              userId,
+              {
+                $map: {
+                  input: { $ifNull: ["$unlikes", []] },
+                  as: "unlike",
+                  in: { $toString: "$$unlike" }, 
+                },
+              },
+            ],
+          },
+        }
       },
       { $unwind: "$ownerData" },
       { $match: matchStage },
@@ -33,8 +62,8 @@ async function handleGallery(req, res) {
           content: 1,
           coverimgUrl: 1,
           createdAt: 1,
-          likes: 1,
-          unlikes: 1,
+          likeCount: { $size: { $ifNull: ["$likes", []] } },
+          unlikeCount: {$size:{$ifNull:["$unlikes",[]]}},
           isLiked: 1,
           isUnliked: 1,
           blogtype: 1,
