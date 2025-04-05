@@ -17,7 +17,7 @@ const ChangeProfile = lazy(() => import('../components/pages/ChangeProfile'));
 
 const token = Cookies.get('token');
 const isAuthenticated = Boolean(token);
-// console.log('isAuthenticated', isAuthenticated);
+console.log('isAuthenticated', isAuthenticated);
 function Routers() {
   return (
     <Suspense fallback={<div className="text-center py-10">Loading...</div>}>

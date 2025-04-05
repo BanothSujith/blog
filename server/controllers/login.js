@@ -23,18 +23,22 @@ async function handleLogin(req, res) {
     const token = setUser(user); 
     const { password:_, ...userWithoutPassword } = user._doc;
 // console.log(userWithoutPassword)
-    res.status(200)
-      // .cookie('token', token, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV === 'production',
-      //   sameSite: 'strict',
-      // })
-      .json({
+res
+  .status(200)
+  .cookie("token", token, {
+    httpOnly: false,
+    secure: true,
+    sameSite: "None",
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+  })
+  .cookie("user", JSON.stringify(userWithoutPassword), {
+    httpOnly: false, // so frontend can read
+    secure: true,
+    sameSite: "None",
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+  })
+  .json({ message: "Login successful" });
 
-        user:userWithoutPassword,
-        token: token,
-
-      });
 
   } catch (error) {
     console.error('Error logging in user:', error);
