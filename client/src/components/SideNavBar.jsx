@@ -21,7 +21,7 @@ function SideNavBar() {
   const dropdownRef = useRef(null);
   const [initialAnimation, setInitialAnimation] = useState({ x: -10 });
   const [animate, setAnimate] = useState({ x: 0 });
-  const userid = JSON.parse(cookies.get("user") || "null");
+  const userid = localStorage.getItem("user") ? JSON.parse( localStorage.getItem("user")) : "null";
   const mySideNavBar = [
     { icon: IoHomeOutline, label: "Home", navigator: "/" },
     { icon: PiVideoDuotone, label: "Videos", navigator: "/videos" },

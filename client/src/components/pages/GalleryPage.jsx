@@ -12,11 +12,13 @@ import Message from "../../utility/Message";
 import { useDispatch, useSelector } from "react-redux";
 import { setGalleryVideos } from "../../reduxstore/slices";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router";
 
 function GalleryPage() {
   const [likeStatus, setLikeStatus] = useState({});
   const [Loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const galleryBlogs =
     useSelector((state) => state.videoPlaying.galleryVideos) || [];
   useEffect(() => {
@@ -27,7 +29,6 @@ function GalleryPage() {
           `${import.meta.env.VITE_APP_BACKEND_URI}/gallery`,
           { withCredentials: true }
         );
-        console.log(response.data);
         setLoading(false);
         // Message(response.data.message, response.statusText);
         if (response.data && response.data.galleryBlogs) {
@@ -144,7 +145,7 @@ function GalleryPage() {
                 className="bg-[var(--bg-card)] p-1 rounded-lg flex flex-col gap-3 w-full h-[26rem] aspect-square"
               >
                 {/* User Info */}
-                <div className="flex gap-4 items-center text-[var(--text)]">
+                <div className="flex gap-4 items-center text-[var(--text)]" onClick={() => {navigate(`/user/${data.owner._id}`)}}>
                   <img
                     src={
                       data.owner?.profile || "https://via.placeholder.com/150"

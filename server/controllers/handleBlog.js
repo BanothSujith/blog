@@ -48,6 +48,7 @@ async function handleBlog(req, res) {
           profile: "$createdByData.profile",
           coverimgUrl: 1,
           blogtype: 1,
+          views:1,
         },
       },
     ]);

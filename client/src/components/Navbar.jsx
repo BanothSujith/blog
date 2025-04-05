@@ -54,10 +54,10 @@ function Navbar() {
         </div>
 
         {/* Search Bar */}
-        <div className=" w-full max-w-[40%] md:max-w-[80%] h-full flex gap-6 translate-x-4">
+        <div className=" w-full max-w-[60%]   md:max-w-[80%] h-full flex gap-6 translate-x-8 md:translate-x-0">
           <form
             onSubmit={handleSearch}
-            className="relative flex items-center bg-[var(--smallcard)] gap-1 p-1 rounded-md h-full"
+            className="relative flex items-center bg-[var(--smallcard)]  gap-1 p-1 rounded-md h-full w-full"
           >
             <button type="submit" >
               <IoSearchOutline className="text-[var(--text)] mt-[2px] text-3xl" />

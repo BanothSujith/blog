@@ -134,11 +134,12 @@ function VideoPage() {
           comments: prev.comments.concat(data.data.comment),
         }));
         Message("Comment sent successfully", "OK");
+        setCommentSendButton(false);
       }
     } catch (error) {
       console.error("Failed to send comment:", error);
     } finally {
-      setCommentSendButton(false);
+      // setCommentSendButton(false);
     }
   };
   const handleSubscribe = async () => {
@@ -347,7 +348,7 @@ function VideoPage() {
             <button
               disabled={commentSendButton}
               onClick={handleSubmit}
-              className="cursor-pointer disabled:cursor-not-allowed"
+              className={`cursor-pointer disabled:cursor-not-allowed ${commentSendButton ? "opacity-40" : ""}`}
             >
               <LuSendHorizontal className="text-3xl" />
             </button>

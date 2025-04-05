@@ -13,7 +13,7 @@ async function handleRegister(req, res) {
   );
   if (userExists) {
 
-    return res.status(400).json({ message: "User already exists" });
+    return res.status(400).json({ message: "User already exists with this mailId" });
   }
   const profileUrl = await cloudinaryService(profile);
   const coverimgUrl = await cloudinaryService(coverimg);
@@ -33,8 +33,9 @@ async function handleRegister(req, res) {
       user: { name, email, phoneNo },
     });
   } catch (error) {
-    console.error("error while registration ", error);
-    res.status(500).json({ message: "Failed to register " });
+    if (error.code === 11000 && error.keyPattern?.phoneNo) {
+      return res.status(400).json({ success: false, message: "Phone number already exists" });
+    }    res.status(500).json({ message: "Failed to register " });
   }
 }
 

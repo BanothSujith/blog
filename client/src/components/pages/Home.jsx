@@ -29,7 +29,6 @@ function Home() {
           withCredentials: true,
         });
         const data = response.data.blogs;
-          console.log(response.data);
         if (data?.length === 0) {
           setHasMore(false);
           return;

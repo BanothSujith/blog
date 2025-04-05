@@ -38,7 +38,6 @@ const videoPlayingSlice = createSlice({
     message: "",
     messageStatus: "",
     chatBot:false,
-    isSearchPageOpen: false,
   },
   reducers: {
     changeVideoPlaying: (state, action) => {
@@ -61,9 +60,7 @@ const videoPlayingSlice = createSlice({
     setMessageStatus: (state, action) => {
       state.messageStatus = action.payload;
     },
-    setSearchPageRequest: (state) => {
-      state.isSearchPageOpen = !state.isSearchPageOpen;
-    },
+    
     setChatBot:(state)=>{
       state.chatBot = !state.chatBot;
     }

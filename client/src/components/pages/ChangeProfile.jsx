@@ -14,7 +14,6 @@ const imageFormats = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 function ChangeProfile() {
   const [newProfile, setNewProfile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0); 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -34,14 +33,13 @@ function ChangeProfile() {
     if (!newProfile) return Message("Profile image is required", "warning");
 
     try {
-      const existingCookie = Cookies.get("user")
-        ? JSON.parse(Cookies.get("user"))
+      const existingCookie = localStorage.getItem("user")
+        ? JSON.parse(localStorage.getItem("user"))
         : {};
       const formData = new FormData();
       formData.append("profileImage", newProfile);
       formData.append("oldprofile", existingCookie?.profile);
       setLoading(true);
-      setUploadProgress(0); // Reset progress
 
       const response = await axios.post(
         `${import.meta.env.VITE_APP_BACKEND_URI}/editprofile`,
@@ -56,7 +54,7 @@ function ChangeProfile() {
         ...existingCookie,
         profile: response.data.updatedprofile,
       };
-      Cookies.set("user", JSON.stringify(updatedCookie), {
+      localStorage.setItem("user", JSON.stringify(updatedCookie), {
         path: "/",
         expires: 7,
       });

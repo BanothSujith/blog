@@ -8,6 +8,7 @@ import Routers from "./routes/Routers";
 import { setChatBot, setSettingsPageRequest } from "./reduxstore/slices";
 import Message from "./components/pages/Message";
 import { BsChatTextFill } from "react-icons/bs";
+import { FaChevronDown } from "react-icons/fa";
 
 const Settingspage = lazy(() => import("./components/pages/SettingsPage"));
 const ChatBot = lazy(() => import("./components/pages/ChatBot"));
@@ -124,13 +125,13 @@ function Layout() {
       {/* ✅ Chatbot Button */}
       {!isSettingspageOpen && !hideLayout &&isMobile  && (
         <motion.button
-          className="text-5xl absolute bottom-0 right-5 chatbot-button"
+          className={`absolute bottom-0 right-5 chatbot-button ${chatBot?"p-4 rounded-full flex items-center justify-center bg-[#4c38bb]":""}`}
           initial={{ y: 0, opacity: 0 }}
           animate={{ y: -90, opacity: 1 }}
           transition={{ duration: 0.3, ease: "linear" }}
           onClick={() =>{ dispatch(setChatBot())}}
         >
-          <BsChatTextFill className="text-[#4c38bb]" />
+          {!chatBot? <BsChatTextFill className="text-[#4c38bb] text-5xl" />:<motion.div initial={{rotate:180}} animate={{rotate:0}}  transition={{duration:.3,ease:"linear"}} ><FaChevronDown className="text-[#fff] text-2xl" /></motion.div>}
         </motion.button>
       )}
 

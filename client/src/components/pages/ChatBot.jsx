@@ -21,7 +21,6 @@ function ChatBot({ fullScreen, setFullScreen }) {
   const chatContainerRef = useRef(null);
   const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState(window.innerWidth<500);
-console.log(isMobile)
   useEffect(() => {
     setTimeout(() => {
       if (chatContainerRef.current) {

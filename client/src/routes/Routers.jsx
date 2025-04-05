@@ -17,7 +17,6 @@ const ChangeProfile = lazy(() => import('../components/pages/ChangeProfile'));
 const token =localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
 const isAuthenticated = Boolean(token);
-console.log('isAuthenticated', isAuthenticated);
 function Routers() {
 
   return (

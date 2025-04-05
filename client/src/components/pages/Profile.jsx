@@ -31,7 +31,7 @@ const Profilepage = () => {
     setFilteredBlogs(item);
   };
   return (
-    <div className="h-full bg-[var(--bg-color)] overflow-auto">
+    <div className="h-full bg-[var(--bg-color)] overflow-auto pb-12">
       <div>
         {/*Background profile image*/}
         <div className="relative h-[20vh] lg:h-[40vh]">
