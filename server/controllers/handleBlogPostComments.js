@@ -39,12 +39,13 @@ const handleBlogPostComments = async (req, res) => {
       creatorName: user.userName, 
         });
 
-    await blog.save();
+  const commentid =  await blog.save();
+  // console.log(commentid.comments[commentid.comments.length-1]._id)
     res
       .status(201)
       .json({
         message: "Comment added successfully",
-        comment: { content, createdBy: id, creatorName: user.userName },
+        comment: { content, createdBy: id, creatorName: user.userName, _id: commentid.comments[commentid.comments.length-1]._id },
       });
   } catch (error) {
     console.error("Error adding comment:", error);

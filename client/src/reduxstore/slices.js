@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import ChatBot from "../components/pages/ChatBot";
 
 const safeParseJSON = (key, defaultValue) => {
   try {

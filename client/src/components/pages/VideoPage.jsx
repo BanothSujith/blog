@@ -1,4 +1,4 @@
-import { useLocation } from "react-router";
+// import { useLocation } from "react-router";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -6,7 +6,6 @@ import { LuSendHorizontal } from "react-icons/lu";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import VideoPageCard from "../../cards/VideopageCard";
 import { useSelector } from "react-redux";
-import Cookies from "js-cookie";
 import {
   AiOutlineLike,
   AiFillLike,
@@ -15,6 +14,7 @@ import {
 } from "react-icons/ai";
 import Message from "../../utility/Message";
 import { AnimatePresence, motion } from "framer-motion";
+import CommentDelete from "./CommentDelete";
 
 function VideoPage() {
   // const location = useLocation();
@@ -29,10 +29,18 @@ function VideoPage() {
   const [likedCount, setLinkedCount] = useState(0);
   const [dislikedCount, setDislikedCount] = useState(0);
   const [readComents, setReadComments] = useState(false);
+  const [commentedid, setCommentedid] = useState(null);
+  const [resData,setResData] = useState(null)
   const filteredRelatedVideos = useSelector(
     (state) => state.videoPlaying.videos
   );
   const videoplayingRef = useRef(null);
+  useEffect(()=>{
+    setVideoData((prevComments) => ({
+      ...prevComments,
+      comments: prevComments?.comments?.filter((comment) => comment._id !== resData),
+    }));
+  },[resData])
   // useEffect(() => {
   //   const video = videoplayingRef.current;
 
@@ -126,12 +134,11 @@ function VideoPage() {
         { comment },
         { withCredentials: true }
       );
-
       if (data.statusText === "Created") {
         setComment("");
         setVideoData((prev) => ({
           ...prev,
-          comments: prev.comments.concat(data.data.comment),
+          comments: prev.comments.concat(data.data.comment ),
         }));
         Message("Comment sent successfully", "OK");
         setCommentSendButton(false);
@@ -142,7 +149,8 @@ function VideoPage() {
       // setCommentSendButton(false);
     }
   };
-  const handleSubscribe = async () => {
+  const handleSubscribe = async (e) => {
+    e.stopPropagation();
     const response = await axios.post(
       ` ${import.meta.env.VITE_APP_BACKEND_URI}/subscribe`,
       { channelId: videoData?.ownerId },
@@ -234,9 +242,9 @@ function VideoPage() {
         className="w-full lg:h-[80vh]"
       />
 
-      <div className="w-full h-full lg:flex px-4 gap-12">
+      <div className="w-full h-full lg:flex px-4 ">
         {/* Left Section (Video Details & Comments) */}
-        <div className=" w-full lg:w-[60%] flex flex-col gap-2 md:gap-4 text-[var(--text)] ">
+        <div className=" w-full min-h-fit lg:w-[70%] flex flex-col gap-2 md:gap-4 text-[var(--text)] lg:border-r lg:pr-16 ">
           <p className="text-lg font-medium w-full h-full max-h-fit leading-normal  line-clamp-2">
             {videoData?.title}
           </p>
@@ -273,11 +281,16 @@ function VideoPage() {
                 </div>
               </div>
               <button
-                onClick={handleSubscribe}
-                className={`subscribe capitalize md:mx-4 px-4 w-fit py-1 border rounded-sm border-[#f1a6a6] `}
-              >
-                {isSubscribed ? "subscribed" : "subscribe"}
-              </button>
+                    onClick={handleSubscribe}
+                    className={`relative group capitalize md:mx-4 px-4 w-fit py-1 active:scale-95 border border-[#f1a6a6] overflow-hidden rounded-sm text-[var(--text)]`}
+                  >
+                    <span className="relative z-10">
+                      {isSubscribed ? "subscribed" : "subscribe"}
+                    </span>
+
+                    {/* Fill effect span */}
+                    <span className="absolute left-0 top-0 h-full w-full bg-[#ac2424] transform -translate-x-full group-hover:translate-x-0  active:scale-95 transition-transform duration-300 ease-in-out"></span>
+                  </button>
             </div>
 
             <div className="px-12 w-full md:max-w-[50%]  flex text-[var(-text)] items-center  gap-6 text-3xl">
@@ -377,11 +390,13 @@ function VideoPage() {
                   }   flex flex-col gap-4 overflow-hidden lg:overflow-auto`}
                 >
                   {videoData?.comments?.map((comment, index) => (
+                    
                     <div
                       key={index}
                       className="w-full px-2 md:p-2 flex justify-between items-center"
                     >
-                      <div>
+                      <div className="relative ">
+                      
                         <p className="text-xs font-semibold">
                           -{comment?.creatorName || "Anonymous"}
                         </p>
@@ -389,9 +404,21 @@ function VideoPage() {
                           {comment?.content}
                         </p>
                       </div>
-                      <span>
+                      <div onClick={()=>setCommentedid(commentedid === comment._id? "" : (comment._id))} className="relative cursor-pointer">
                         <BsThreeDotsVertical />
-                      </span>
+                          <AnimatePresence mode="wait">
+                          {commentedid === comment._id &&
+                         <motion.div 
+                           initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1,scale: 1 }}
+                            exit={{ opacity: 0, scale: 0 }}
+                            transition={{ duration: 0.3 ,ease: "easeInOut" }}
+                        className="absolute -bottom-4 right-5">
+                          <CommentDelete ownerid={videoData.ownerId} commentid={comment.createdBy} id={comment?._id} setResData={setResData} endpoint={`deletecomment/${comment?._id}`} onClose={setCommentedid}/>
+                        </motion.div>  }
+                        </AnimatePresence>
+                      
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -414,11 +441,11 @@ function VideoPage() {
             Related Videos
           </h1>
           <div className="flex flex-col gap-4 h-fit  overflow-auto scrollbar pb-16">
-            {relatedBlogs?.map((item) => (
+            { relatedBlogs.length >0 ?( relatedBlogs?.map((item) => (
               <div key={item._id}>
                 <VideoPageCard item={item} />
               </div>
-            )) || (
+            ))) : (
               <p className="p-4 text-[var(--text)]">No related videos found</p>
             )}
           </div>

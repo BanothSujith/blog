@@ -19,14 +19,15 @@ async function handleGallery(req, res) {
     const galleryBlogs = await Blog.aggregate([
       {
         $lookup: {
-          from: "users", 
+          from: "users",
           localField: "createdBy",
           foreignField: "_id",
           as: "ownerData",
         },
       },
+      { $unwind: "$ownerData" },
       {
-        $addFields:{
+        $addFields: {
           isLiked: {
             $in: [
               userId,
@@ -46,12 +47,24 @@ async function handleGallery(req, res) {
                 $map: {
                   input: { $ifNull: ["$unlikes", []] },
                   as: "unlike",
-                  in: { $toString: "$$unlike" }, 
+                  in: { $toString: "$$unlike" },
                 },
               },
             ],
           },
-        }
+          isSubscribed: {
+            $in: [
+              userId,
+              {
+                $map: {
+                  input: { $ifNull: ["$ownerData.subscribers", []] },
+                  as: "sub",
+                  in: { $toString: "$$sub" },
+                },
+              },
+            ],
+          },
+        },
       },
       { $unwind: "$ownerData" },
       { $match: matchStage },
@@ -63,10 +76,11 @@ async function handleGallery(req, res) {
           coverimgUrl: 1,
           createdAt: 1,
           likeCount: { $size: { $ifNull: ["$likes", []] } },
-          unlikeCount: {$size:{$ifNull:["$unlikes",[]]}},
+          unlikeCount: { $size: { $ifNull: ["$unlikes", []] } },
           isLiked: 1,
           isUnliked: 1,
           blogtype: 1,
+          isSubscribed: 1,
           owner: {
             _id: "$ownerData._id",
             userName: "$ownerData.userName",
@@ -76,7 +90,6 @@ async function handleGallery(req, res) {
         },
       },
     ]);
-
     res.status(200).json({
       galleryBlogs,
       message: galleryBlogs.length

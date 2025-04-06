@@ -40,7 +40,6 @@ function VideoPageCard({ item  }) {
          
         </div>
 
-        {/* Views & Timestamp */}
         
       </div>
     </div>

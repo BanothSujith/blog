@@ -1,6 +1,5 @@
-import React, { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import ChangePassword from '../components/pages/ChangePasword';
 
 const Home = lazy(() => import('../components/pages/Home'));
