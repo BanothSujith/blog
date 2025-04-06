@@ -134,7 +134,7 @@ function VideoPage() {
         { comment },
         { withCredentials: true }
       );
-      if (data.statusText === "Created") {
+      if (data.data?.message === "Comment added successfully") {
         setComment("");
         setVideoData((prev) => ({
           ...prev,
