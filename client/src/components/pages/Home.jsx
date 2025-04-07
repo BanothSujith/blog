@@ -85,7 +85,7 @@ function Home() {
           {blogs?.map((item, index) => (
             <motion.div
               key={item._id}
-              className="w-full md:w-[22rem] mx-auto"
+              className="w-full md:max-w-[22rem] mx-auto"
               ref={index === blogs.length - 1 ? lastBlogRef : null}
               onClick={() => navigate(`video/${item._id}`)}
               initial={{ opacity: 0, y: 30 }}

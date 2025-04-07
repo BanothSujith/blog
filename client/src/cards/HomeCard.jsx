@@ -7,7 +7,7 @@ function HomeCard({ item }) {
 
   return (
     <div className="bg-transparent w-full overflow-hidden rounded-lg flex flex-col cursor-pointer text-[var(--text)]">
-      <div className="w-full  h-[15rem] aspect-video md:rounded-2xl overflow-hidden relative">
+      <div className="w-full max-h-[15rem] aspect-video md:rounded-2xl overflow-hidden relative">
         {isImgLoading && (
           <div className="w-full h-full bg-[var(--smallcard)] animate-pulse absolute top-0 left-0 z-0" />
         )}
@@ -15,7 +15,7 @@ function HomeCard({ item }) {
           src={item.coverimgUrl}
           alt="cover"
           onLoad={() => setImgLoading(false)}
-          className={`w-full h-full object-fill  transition-opacity duration-300 ${
+          className={`w-full h-full object-fill object-top transition-opacity duration-300 ${
             isImgLoading ? "opacity-0" : "opacity-100"
           }`}
         />

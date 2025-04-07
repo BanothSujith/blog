@@ -71,7 +71,7 @@ function GalleryCard({
           <span className="relative z-10">
             {data?.isSubscribed ? "subscribed" : "subscribe"}
           </span>
-          <span className="absolute left-0 top-0 h-full w-full bg-[#ac2424] transform -translate-x-full group-hover:translate-x-0  active:scale-95 transition-transform duration-300 ease-in-out"></span>
+          <span className="absolute left-0 top-0 h-full w-full bg-[#ac2424] transform -translate-x-full lg:group-hover:translate-x-0  active:scale-95 transition-transform duration-300 ease-in-out"></span>
         </button>
       </div>
 
