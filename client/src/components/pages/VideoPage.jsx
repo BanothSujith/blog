@@ -99,7 +99,6 @@ function VideoPage() {
     const itemCreator = item?.userName?.toLowerCase() || "";
     return itemCreator.includes(creatorName);
   });
-  console.log(relatedBlogs);
   useEffect(() => {
     const fetchVideo = async () => {
       try {
@@ -116,8 +115,8 @@ function VideoPage() {
         setIsunliked(response.data.video.isUnliked);
         setDislikedCount(response.data.video.dislikeCount);
       } catch (error) {
-        Message(error.response?.data?.error || "An error occurred", "warning");
         navigate("/login");
+        Message(error.response?.data?.error || "An error occurred", "warning");
       }
     };
 
