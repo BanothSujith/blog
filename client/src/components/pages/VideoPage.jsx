@@ -30,17 +30,19 @@ function VideoPage() {
   const [dislikedCount, setDislikedCount] = useState(0);
   const [readComents, setReadComments] = useState(false);
   const [commentedid, setCommentedid] = useState(null);
-  const [resData,setResData] = useState(null)
+  const [resData, setResData] = useState(null);
   const filteredRelatedVideos = useSelector(
     (state) => state.videoPlaying.videos
   );
   const videoplayingRef = useRef(null);
-  useEffect(()=>{
+  useEffect(() => {
     setVideoData((prevComments) => ({
       ...prevComments,
-      comments: prevComments?.comments?.filter((comment) => comment._id !== resData),
+      comments: prevComments?.comments?.filter(
+        (comment) => comment._id !== resData
+      ),
     }));
-  },[resData])
+  }, [resData]);
   // useEffect(() => {
   //   const video = videoplayingRef.current;
 
@@ -92,14 +94,14 @@ function VideoPage() {
   const relatedBlogs = filteredRelatedVideos?.filter((item) => {
     if (!videoData || item._id === videoData._id) return false;
 
- 
     const creatorName = videoData?.userName?.toLowerCase() || "";
+    console.log(creatorName);
 
-
-    const itemCreator = item?.createdBy?.userName?.toLowerCase() || "";
-
+    const itemCreator = item?.userName?.toLowerCase() || "";
+    console.log(itemCreator);
     return itemCreator.includes(creatorName);
   });
+  console.log(relatedBlogs);
   useEffect(() => {
     const fetchVideo = async () => {
       try {
@@ -138,7 +140,7 @@ function VideoPage() {
         setComment("");
         setVideoData((prev) => ({
           ...prev,
-          comments: prev.comments.concat(data.data.comment ),
+          comments: prev.comments.concat(data.data.comment),
         }));
         Message("Comment sent successfully", "OK");
         setCommentSendButton(false);
@@ -156,10 +158,13 @@ function VideoPage() {
       { channelId: videoData?.ownerId },
       { withCredentials: true }
     );
-    if(response.data.error === "Unauthorized, token not provided." || response.data.error === 'Invalid token.'){
-      Message('Please login to subscribe', 'Error');
-      return navigate('/login');
-    } 
+    if (
+      response.data.error === "Unauthorized, token not provided." ||
+      response.data.error === "Invalid token."
+    ) {
+      Message("Please login to subscribe", "Error");
+      return navigate("/login");
+    }
     if (response.data.message === "Subscribed successfully") {
       setIsSubscribed(true);
       setVideoData((prev) => ({
@@ -270,7 +275,7 @@ function VideoPage() {
                       key={videoData?.subscribersCount}
                       initial={{ y: 10, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      exit={{ rotate:360, opacity: 0 } }
+                      exit={{ rotate: 360, opacity: 0 }}
                       transition={{ duration: 0.3 }}
                       className="text-sm font-semibold"
                     >
@@ -281,16 +286,16 @@ function VideoPage() {
                 </div>
               </div>
               <button
-                    onClick={handleSubscribe}
-                    className={`relative group capitalize md:mx-4 px-4 w-fit py-1 active:scale-95 border border-[#f1a6a6] overflow-hidden rounded-sm text-[var(--text)]`}
-                  >
-                    <span className="relative z-10">
-                      {isSubscribed ? "subscribed" : "subscribe"}
-                    </span>
+                onClick={handleSubscribe}
+                className={`relative group capitalize md:mx-4 px-4 w-fit py-1 active:scale-95 border border-[#f1a6a6] overflow-hidden rounded-sm text-[var(--text)]`}
+              >
+                <span className="relative z-10">
+                  {isSubscribed ? "subscribed" : "subscribe"}
+                </span>
 
-                    {/* Fill effect span */}
-                    <span className="absolute left-0 top-0 h-full w-full bg-[#ac2424] transform -translate-x-full lg:group-hover:translate-x-0  active:scale-95 transition-transform duration-300 ease-in-out"></span>
-                  </button>
+                {/* Fill effect span */}
+                <span className="absolute left-0 top-0 h-full w-full bg-[#ac2424] transform -translate-x-full lg:group-hover:translate-x-0  active:scale-95 transition-transform duration-300 ease-in-out"></span>
+              </button>
             </div>
 
             <div className="px-12 w-full md:max-w-[50%]  flex text-[var(-text)] items-center  gap-6 text-3xl">
@@ -304,9 +309,9 @@ function VideoPage() {
                     key={likedCount}
                     initial={{ y: 10, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    exit={{rotate:360, opacity: 0 }}
+                    exit={{ y: -10, opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="text-xl font-bold"
+                    className="text-base"
                   >
                     {likedCount}
                   </motion.span>
@@ -322,7 +327,7 @@ function VideoPage() {
                     key={dislikedCount}
                     initial={{ y: 10, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    exit={{ rotate:360, opacity: 0 }}
+                    exit={{ rotate: 360, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                     className="text-xl font-bold"
                   >
@@ -361,7 +366,9 @@ function VideoPage() {
             <button
               disabled={commentSendButton}
               onClick={handleSubmit}
-              className={`cursor-pointer disabled:cursor-not-allowed ${commentSendButton ? "opacity-40" : ""}`}
+              className={`cursor-pointer disabled:cursor-not-allowed ${
+                commentSendButton ? "opacity-40" : ""
+              }`}
             >
               <LuSendHorizontal className="text-3xl" />
             </button>
@@ -390,13 +397,11 @@ function VideoPage() {
                   }   flex flex-col gap-4 overflow-hidden lg:overflow-auto`}
                 >
                   {videoData?.comments?.map((comment, index) => (
-                    
                     <div
                       key={index}
                       className="w-full px-2 md:p-2 flex justify-between items-center"
                     >
                       <div className="relative ">
-                      
                         <p className="text-xs font-semibold">
                           -{comment?.creatorName || "Anonymous"}
                         </p>
@@ -404,20 +409,35 @@ function VideoPage() {
                           {comment?.content}
                         </p>
                       </div>
-                      <div onClick={()=>setCommentedid(commentedid === comment._id? "" : (comment._id))} className="relative cursor-pointer">
+                      <div
+                        onClick={() =>
+                          setCommentedid(
+                            commentedid === comment._id ? "" : comment._id
+                          )
+                        }
+                        className="relative cursor-pointer"
+                      >
                         <BsThreeDotsVertical />
-                          <AnimatePresence mode="wait">
-                          {commentedid === comment._id &&
-                         <motion.div 
-                           initial={{ opacity: 0, scale: 0 }}
-                            animate={{ opacity: 1,scale: 1 }}
-                            exit={{ opacity: 0, scale: 0 }}
-                            transition={{ duration: 0.3 ,ease: "easeInOut" }}
-                        className="absolute -bottom-4 right-5">
-                          <CommentDelete ownerid={videoData.ownerId} commentid={comment.createdBy} id={comment?._id} setResData={setResData} endpoint={`deletecomment/${comment?._id}`} onClose={setCommentedid}/>
-                        </motion.div>  }
+                        <AnimatePresence mode="wait">
+                          {commentedid === comment._id && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0 }}
+                              transition={{ duration: 0.3, ease: "easeInOut" }}
+                              className="absolute -bottom-4 right-5"
+                            >
+                              <CommentDelete
+                                ownerid={videoData.ownerId}
+                                commentid={comment.createdBy}
+                                id={comment?._id}
+                                setResData={setResData}
+                                endpoint={`deletecomment/${comment?._id}`}
+                                onClose={setCommentedid}
+                              />
+                            </motion.div>
+                          )}
                         </AnimatePresence>
-                      
                       </div>
                     </div>
                   ))}
@@ -441,11 +461,13 @@ function VideoPage() {
             Related Videos
           </h1>
           <div className="flex flex-col gap-4 h-fit  overflow-auto scrollbar pb-16">
-            { relatedBlogs.length >0 ?( relatedBlogs?.map((item) => (
-              <div key={item._id}>
-                <VideoPageCard item={item} />
-              </div>
-            ))) : (
+            {relatedBlogs.length > 0 ? (
+              relatedBlogs?.map((item) => (
+                <div key={item._id}>
+                  <VideoPageCard item={item} />
+                </div>
+              ))
+            ) : (
               <p className="p-4 text-[var(--text)]">No related videos found</p>
             )}
           </div>
