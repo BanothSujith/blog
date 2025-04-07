@@ -85,7 +85,7 @@ function GalleryCard({
             src={data.coverimgUrl}
             alt="Uploaded"
             onLoad={() => setImageLoading(false)}
-            className={`w-full h-64 object-cover transition-opacity duration-300 ${
+            className={`w-full h-64 object-fill transition-opacity duration-300 ${
               isImageLoading ? "opacity-0" : "opacity-100"
             }`}
           />

@@ -128,7 +128,7 @@ function Navbar() {
               >
                 <img
                   src={user?.profile || defaultprofile}
-                  className="text-sm rounded-full h-full aspect-square"
+                  className="text-sm rounded-full object-cover object-top h-full aspect-square"
                 />
               </motion.div>
               <motion.div

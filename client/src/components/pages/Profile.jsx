@@ -59,7 +59,7 @@ const Profilepage = () => {
           <img
             src={profile.profile || defaultprofile}
             alt="Profile"
-            className="rounded-full w-28 md:w-60 aspect-square bg-[var(--bg-color)] p-1 object-cover"
+            className="rounded-full w-28 md:w-60 aspect-square bg-[var(--bg-color)] p-1 object-cover object-top"
           />
         </div>
       </div>

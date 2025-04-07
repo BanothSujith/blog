@@ -51,12 +51,15 @@ function Settingspage() {
       { withCredentials: true }
     );
     if (response.data?.message === "Logout successful") {
-      localStorage.removeItem("user");
-      setUser(null);
-      dispatch(setSettingsPageRequest());
       Message("Logged Out Successfully....!", "OK");
-      window.location.reload();
     }
+    setUser(null);
+    localStorage.removeItem("user");
+    dispatch(setSettingsPageRequest());
+
+    window.location.reload();
+
+
   };
 
   const handleClicks = (item, index) => {
@@ -103,7 +106,7 @@ function Settingspage() {
               <img
                 src={user?.profile || defaultprofile}
                 alt="Profile"
-                className="max-w-24 min-w-24 aspect-square p-[1px] bg-[var(--text)] rounded-full"
+                className="max-w-24 min-w-24 object-cover object-top aspect-square p-[1px] bg-[var(--text)] rounded-full"
               />
               <button
                 className="absolute right-0 top-0 p-1 hover:scale-105 transition-all duration-75 ease-in-out"

@@ -70,7 +70,7 @@ function ProfileCards({ blog,setResData }) {
         <img
           src={blog.coverimgUrl || "/default.jpg"}
           alt="Cover"
-          className="w-full aspect-square object-cover rounded-lg"
+          className="w-full aspect-square object-fill rounded-lg"
         />
       </div>
 
