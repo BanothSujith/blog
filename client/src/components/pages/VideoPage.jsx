@@ -95,10 +95,8 @@ function VideoPage() {
     if (!videoData || item._id === videoData._id) return false;
 
     const creatorName = videoData?.userName?.toLowerCase() || "";
-    console.log(creatorName);
 
     const itemCreator = item?.userName?.toLowerCase() || "";
-    console.log(itemCreator);
     return itemCreator.includes(creatorName);
   });
   console.log(relatedBlogs);

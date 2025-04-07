@@ -51,14 +51,13 @@ function Settingspage() {
       { withCredentials: true }
     );
     if (response.data?.message === "Logout successful") {
+      setUser(null);
+      localStorage.removeItem("user");
+      dispatch(setSettingsPageRequest());
+      window.location.reload();
       Message("Logged Out Successfully....!", "OK");
     }
-    setUser(null);
-    localStorage.removeItem("user");
-    dispatch(setSettingsPageRequest());
-
-    window.location.reload();
-
+   
 
   };
 

@@ -4,7 +4,6 @@ import ChangePassword from '../components/pages/ChangePasword';
 
 const Home = lazy(() => import('../components/pages/Home'));
 const Login = lazy(() => import('../components/pages/Login'));
-
 const Register = lazy(() => import('../components/pages/Register'));
 const NotFound = lazy(() => import('../components/pages/NotFound'));
 const CreateVideoBlog = lazy(() => import('../components/pages/CreateVideoBlog'));
