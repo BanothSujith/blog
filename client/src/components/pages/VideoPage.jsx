@@ -303,7 +303,7 @@ function VideoPage() {
                 onClick={hanldelike}
                 className="flex gap-1 flex-row-reverse "
               >
-                {isLiked ? <AiFillLike /> : <AiOutlineLike />}{" "}
+                {isLiked ? <AiFillLike /> : <AiOutlineLike />}
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={likedCount}
@@ -311,7 +311,7 @@ function VideoPage() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -10, opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="text-base"
+                    className="text-xl font-bold"
                   >
                     {likedCount}
                   </motion.span>
@@ -463,7 +463,10 @@ function VideoPage() {
           <div className="flex flex-col gap-4 h-fit  overflow-auto scrollbar pb-16">
             {relatedBlogs.length > 0 ? (
               relatedBlogs?.map((item) => (
-                <div key={item._id}>
+                <div
+                  key={item._id}
+                  onClick={() =>{navigate(`/video/${item._id}`); window.location.reload()}}
+                >
                   <VideoPageCard item={item} />
                 </div>
               ))

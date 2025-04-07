@@ -54,7 +54,7 @@ function Navbar() {
         </div>
 
         {/* Search Bar */}
-        <div className=" w-full max-w-[60%]   md:max-w-[80%] h-full flex gap-6 translate-x-8 md:translate-x-0">
+        <div className=" w-full max-w-[60%]  md:max-w-[40%] lg:max-w-[20%] h-full flex gap-6 translate-x-8 md:translate-x-0">
           <form
             onSubmit={handleSearch}
             className="relative flex items-center bg-[var(--smallcard)]  gap-1 p-1 rounded-md h-full w-full"

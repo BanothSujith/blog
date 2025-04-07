@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { enUS } from 'date-fns/locale';
 
@@ -14,11 +13,9 @@ const customLocale = {
   },
 };
 
-  const navigate = useNavigate();
   return (
     <div 
       className="bg-transparent md:px-2 py-2 w-full overflow-hidden rounded-lg flex gap-3 cursor-pointer" 
-      onClick={() => navigate(`/video/${item._id}`)}
     >
       <img
         src={item?.coverimgUrl}

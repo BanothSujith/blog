@@ -24,7 +24,7 @@ function SideNavBar() {
   const userid = localStorage.getItem("user") ? JSON.parse( localStorage.getItem("user")) : "null";
   const mySideNavBar = [
     { icon: IoHomeOutline, label: "Home", navigator: "/" },
-    { icon: PiVideoDuotone, label: "Videos", navigator: "/videos" },
+    // { icon: PiVideoDuotone, label: "Videos", navigator: "/videos" },
     { icon: PiImagesSquareFill, label: "Gallery", navigator: "/gallery" },
     { icon: GrNewWindow, label: "New Post", navigator: "/create" },
     { icon: MdOutlineAccountCircle, label: "Profile", navigator: `/user/${userid?._id}` },

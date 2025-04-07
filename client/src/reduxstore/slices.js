@@ -43,12 +43,15 @@ const videoPlayingSlice = createSlice({
       state.isVideoPlaying = action.payload;
     },
     setVideos: (state, action) => {
-      state.videos = action.payload;
-      localStorage.setItem("videos", JSON.stringify(action.payload));
+      // Sort by latest added (assuming a `createdAt` or `timestamp` field exists)
+      const sortedVideos = [...action.payload].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      state.videos = sortedVideos;
+      localStorage.setItem("videos", JSON.stringify(sortedVideos));
     },
     setGalleryVideos: (state, action) => {
-      state.galleryVideos = action.payload;
-      localStorage.setItem("gallery", JSON.stringify(action.payload));
+      const sortedGallery = [...action.payload].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      state.galleryVideos = sortedGallery;
+      localStorage.setItem("gallery", JSON.stringify(sortedGallery));
     },
     setSettingsPageRequest: (state) => {
       state.isSettingsPageRequest = !state.isSettingsPageRequest;
