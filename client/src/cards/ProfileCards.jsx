@@ -35,10 +35,10 @@ function ProfileCards({ blog,setResData }) {
       onClick={handleNavigate}
     >
       <div
-        className="absolute top-5 right-2 cursor-pointer"
+        className="absolute top-3 right-2 cursor-pointer"
         onClick={(e) => e.stopPropagation()} ref={haddleoutclick}
       >
-        <div onClick={handleOptionsToggle} className="relative text-gray-800">
+        <div onClick={handleOptionsToggle} className="relative bg-black/40 py-1 rounded-md text-white ">
           <BsThreeDotsVertical />
           <AnimatePresence mode="wait">
             {options && CommentDeleteComp && (

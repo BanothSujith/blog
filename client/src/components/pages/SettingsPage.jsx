@@ -54,7 +54,7 @@ function Settingspage() {
       setUser(null);
       localStorage.removeItem("user");
       dispatch(setSettingsPageRequest());
-      // window.location.reload();
+      window.location.reload();
       Message("Logged Out Successfully....!", "OK");
     }
    
