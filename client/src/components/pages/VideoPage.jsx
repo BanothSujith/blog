@@ -115,7 +115,10 @@ function VideoPage() {
         setIsunliked(response.data.video.isUnliked);
         setDislikedCount(response.data.video.dislikeCount);
       } catch (error) {
-        navigate("/login");
+        setUser(null);
+       localStorage.removeItem("user");
+       dispatch(setSettingsPageRequest());
+        navigate("/login"); 
         Message(error.response?.data?.error || "An error occurred", "warning");
       }
     };

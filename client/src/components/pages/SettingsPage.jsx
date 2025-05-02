@@ -45,19 +45,28 @@ function Settingspage() {
   }, []);
 
   const handleLogout = async () => {
-    const response = await axios.post(
-      `${import.meta.env.VITE_APP_BACKEND_URI}/logout`,
-      {},
-      { withCredentials: true }
-    );
-    if (response.data?.message === "Logout successful") {
+   try {
+    setUser(null);
+       localStorage.removeItem("user");
+       dispatch(setSettingsPageRequest());
+       window.location.reload();
+       Message("Logged Out Successfully....!", "OK");
+     await axios.post(
+       `${import.meta.env.VITE_APP_BACKEND_URI}/logout`,
+       {},
+       { withCredentials: true }
+     );
+    
+   } catch (error) {
+          Message("Can't LogOut right Now...!", "warning")
+   }
+    finally{
       setUser(null);
       localStorage.removeItem("user");
       dispatch(setSettingsPageRequest());
       window.location.reload();
       Message("Logged Out Successfully....!", "OK");
     }
-   
 
   };
 
