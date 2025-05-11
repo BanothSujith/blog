@@ -18,17 +18,17 @@ function Home() {
   const observer = useRef(null);
 
   const blogs = useSelector((state) => state.videoPlaying.videos) || [];
-
   useEffect(() => {
     const fetchBlogs = async () => {
       if (fetchedPages.current.has(page)) return;
       fetchedPages.current.add(page);
-
+      
       try {
         const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URI}/blogs`, {
           withCredentials: true,
         });
         const data = response.data.blogs;
+        
         if (data?.length === 0) {
           setHasMore(false);
           return;
