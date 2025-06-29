@@ -17,7 +17,7 @@ function CommentDelete({ ownerid="", commentid="", id="", setResData="", onClose
       );
        setResData(id)
       onClose(null);
-      Message("Comment Deleted", "OK");
+      Message("Deleted ", "OK");
     } catch (error) {
       Message("can't proceed right now", "OK");
     }

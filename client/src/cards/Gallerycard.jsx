@@ -23,7 +23,7 @@ function GalleryCard({
   return (
     <div
       key={data._id}
-      className="bg-[var(--bg-card)] p-1 rounded-lg flex flex-col gap-3 w-full h-[26rem] aspect-square"
+      className="bg-[var(--bg-card)] p-3 rounded-lg flex flex-col items-center  gap-3 w-full h-[34rem] aspect-square"
     >
       {/* User Info */}
       <div
@@ -40,7 +40,7 @@ function GalleryCard({
             src={data.owner?.profile || "https://via.placeholder.com/150"}
             alt="Profile"
             onLoad={() => setProfileLoading(false)}
-            className={`rounded-full w-8 h-8 object-cover transition-opacity duration-300 ${
+            className={`rounded-full w-8 h-8 object-cover object-top transition-opacity duration-300  ${
               isProfileLoading ? "opacity-0" : "opacity-100"
             }`}
           />
@@ -77,7 +77,7 @@ function GalleryCard({
 
       {/* Image & Actions */}
       <div className="h-full w-full flex flex-col gap-2">
-        <div className="relative h-64 w-full rounded-lg overflow-hidden">
+        <div className="relative h-[24rem] w-full rounded-lg overflow-hidden">
           {isImageLoading && (
             <div className="absolute top-0 left-0 h-full w-full bg-[var(--smallcard)] animate-pulse z-0" />
           )}
@@ -85,14 +85,14 @@ function GalleryCard({
             src={data.coverimgUrl}
             alt="Uploaded"
             onLoad={() => setImageLoading(false)}
-            className={`w-full h-64 object-fill transition-opacity duration-300 ${
+            className={`w-full h-full object-contain transition-opacity duration-300 ${
               isImageLoading ? "opacity-0" : "opacity-100"
             }`}
           />
         </div>
 
         {/* Like, Dislike, Comment */}
-        <p className="flex gap-6 px-4 items-center text-2xl">
+        <div className="flex gap-6 px-4 items-center text-2xl">
           <span
             className="text-[#eb6b91] cursor-pointer flex flex-row-reverse gap-2 items-center justify-center"
             onClick={() => toggleLike(data._id)}
@@ -134,7 +134,7 @@ function GalleryCard({
               </motion.span>
             </AnimatePresence>
           </span>
-        </p>
+        </div>
 
         {/* Description */}
         <p className="w-full px-2 text-[var(--text)]">
