@@ -10,12 +10,12 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-  origin: [
-    "https://blog-front-end-gilt.vercel.app",
-    "http://localhost:5173",
-    "http://192.168.1.2:5173"
-  ],
-  
+  // origin: [
+  //   "https://blog-front-end-gilt.vercel.app",
+  //   "http://localhost:5173",
+  //   "http://192.168.1.2:5173"
+  // ],
+  origin: "*",
   credentials: true,
 }));
 app.use(express.json());
