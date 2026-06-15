@@ -156,6 +156,7 @@ function VideoPage() {
   };
   const handleSubscribe = async (e) => {
     e.stopPropagation();
+    // hello subscriber
     if (!localStorage.getItem("user")) {
       Message("Please login to Subscribe", "Error");
       return;
