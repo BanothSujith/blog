@@ -115,11 +115,10 @@ function VideoPage() {
         setIsunliked(response.data.video.isUnliked);
         setDislikedCount(response.data.video.dislikeCount);
       } catch (error) {
-        setUser(null);
        localStorage.removeItem("user");
-       dispatch(setSettingsPageRequest());
-        navigate("/login"); 
+       dispatch(setSettingsPageRequest()); 
         Message(error.response?.data?.error || "An error occurred", "warning");
+        navigate("/login");
       }
     };
 
@@ -128,7 +127,10 @@ function VideoPage() {
 
   const handleSubmit = async () => {
     if (!comment.trim()) return;
-
+     if(!localStorage.getItem("user")){
+      Message("Please login to comment", "Error");
+      return ;
+     }
     setCommentSendButton(true);
     try {
       const data = await axios.post(
@@ -153,6 +155,10 @@ function VideoPage() {
   };
   const handleSubscribe = async (e) => {
     e.stopPropagation();
+    if (!localStorage.getItem("user")) {
+      Message("Please login to Subscribe", "Error");
+      return;
+    }
     const response = await axios.post(
       ` ${import.meta.env.VITE_APP_BACKEND_URI}/subscribe`,
       { channelId: videoData?.ownerId },
@@ -183,6 +189,10 @@ function VideoPage() {
     // console.log(response.data.message);
   };
   const hanldelike = async () => {
+    if (!localStorage.getItem("user")) {
+      Message("Please login to like", "Error");
+      return;
+    }
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_APP_BACKEND_URI}/like/${video}`,
@@ -205,6 +215,10 @@ function VideoPage() {
   };
 
   const hanldeUnlike = async () => {
+    if (!localStorage.getItem("user")) {
+      Message("Please login to unlike", "Error");
+      return;
+    }
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_APP_BACKEND_URI}/unlike/${video}`,

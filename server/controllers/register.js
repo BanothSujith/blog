@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
 async function handleRegister(req, res) {
   const { name, email, phoneNo, password } = req.body;
-  // console.log( req.files)
+  console.log( req.files)
   const profile = req.files.profile[0].path;
   const coverimg = req.files?.coverImg[0]?.path || null;
 

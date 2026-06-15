@@ -6,6 +6,7 @@ const routes = require("./routes/routes");
 const cookieParser = require("cookie-parser");
 const User = require("./models/userModel");
 const Blog = require("./models/blog");
+const checker = require("./middleware/checker");
 dotenv.config();
 
 const app = express();
@@ -23,8 +24,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 connection(process.env.MONGODB_URI);
-
-app.use("/",routes);
+app.use(checker);
+app.use("/", routes);
 
 app.get("/test",(req, res) => {
   res.send("Hello World!");

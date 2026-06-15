@@ -91,7 +91,7 @@ function ChangeProfile() {
         <input {...getInputProps()} accept="image/*" />
         {newProfile ? (
           <div>
-            <img src={URL.createObjectURL(newProfile)} className="w-full" />
+            <img src={URL.createObjectURL(newProfile)} loading="lazy" className="w-full" />
             <p className="text-center font-medium text-sm text-[var(--text)]">
               {newProfile.name}
             </p>

@@ -12,16 +12,17 @@
     --smallcard:#a7b8bac8;
     --inputBg:#f3f4f5;
     --border:black;
+    --shodow : #000000;
 }
 .dark{
-    --bg-body:#312d2f;
+    --bg-body:#000000;
     --bg-card: #000000;
     --text: #F5F3F4;
     --navbar :#161A1D;
     --smallcard :#3A3F44;
     --inputBg:#292c2e;
     --border:#bdbaba;
-
+      --shodow : #ffffff4b;
 }
 .hidescroolbar{
     scrollbar-width: none;
@@ -43,4 +44,6 @@
   .scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(76, 56, 187, 1);
   }
-  
+  .transform-3d {
+  transform-style: preserve-3d;
+}

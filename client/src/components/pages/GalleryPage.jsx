@@ -18,6 +18,10 @@ function GalleryPage() {
 
   useEffect(() => {
     const fetchGalleryBlogs = async () => {
+      if (!localStorage.getItem("user")) {
+        Message("Please login to see gallery", "Error");
+        return;
+      }
       try {
         setLoading(true);
         const response = await axios.get(

@@ -11,7 +11,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const fetchedPages = useRef(new Set());
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,6 +24,9 @@ function Home() {
       fetchedPages.current.add(page);
       
       try {
+        console.log(
+          `Fetching page ... ${import.meta.env.VITE_APP_BACKEND_URI}`,
+        );
         const response = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URI}/blogs`, {
           withCredentials: true,
         });
@@ -50,6 +53,11 @@ function Home() {
 
     fetchBlogs();
   }, [page, dispatch]);
+  useEffect(() => {
+    if (error) {
+      Message(error, "error");
+    } 
+  }, [error]);
 
   // ✅ Efficient Intersection Observer
   const lastBlogRef = useCallback(
@@ -73,25 +81,25 @@ function Home() {
   );
 
   return (
-    <div className="w-full h-full overflow-hidden flex justify-center items-start md:px-2 pt-2 pb-16">
-      {error && <Message message={error} type="error" />}
-
+    <div className="w-full h-full overflow-hidden flex justify-center items-start md:px-2 pt-2 ">
       {loading && page === 1 ? (
         <div className="w-full h-full">
           <SkeletonPage />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] gap-6 w-full h-full justify-center items-start overflow-auto hidescroolbar">
+        <div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full h-full justify-center items-start overflow-auto hidescroolbar pb-20 px-1 pt-1 "
+        >
           {blogs?.map((item, index) => (
             <motion.div
               key={item._id}
-              className="w-full md:max-w-[22rem] mx-auto"
+              className={`w-full h-[max(70vw,230px)] md:h-[40vw] lg:h-[22vw] mx-auto transform-3d  overflow-hidden`}
               ref={index === blogs.length - 1 ? lastBlogRef : null}
               onClick={() => navigate(`video/${item._id}`)}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              viewport={{ once: true, amount: 0.3 }} // Animate only once, when 30% visible
+              viewport={{ once: true, amount: 0.3 }} 
             >
               <HomeCard item={item} />
             </motion.div>

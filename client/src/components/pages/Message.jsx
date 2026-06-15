@@ -8,7 +8,7 @@ function Message({ message, type="info" }) {
     info: "bg-blue-200/30 border-blue-400 text-blue-600",
     warning: "bg-yellow-200/30 border-yellow-400 text-yellow-600",
   };
-
+console.log("Message component rendered with type:", type, "and message:", message);
   return (
     <motion.div
       initial={{ y: 20, opacity: 0, scale: 0.95 }}
