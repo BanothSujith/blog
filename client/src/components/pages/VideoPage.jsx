@@ -125,7 +125,8 @@ function VideoPage() {
     fetchVideo();
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+      e.preventDefault();
     if (!comment.trim()) return;
      if(!localStorage.getItem("user")){
       Message("Please login to comment", "Error");
