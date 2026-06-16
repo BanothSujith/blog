@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router";
 import { LuSendHorizontal } from "react-icons/lu";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import VideoPageCard from "../../cards/VideopageCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   AiOutlineLike,
   AiFillLike,
@@ -15,6 +15,7 @@ import {
 import Message from "../../utility/Message";
 import { AnimatePresence, motion } from "framer-motion";
 import CommentDelete from "./CommentDelete";
+import { setSettingsPageRequest } from "../../reduxstore/slices";
 
 function VideoPage() {
   // const location = useLocation();
@@ -31,6 +32,7 @@ function VideoPage() {
   const [readComents, setReadComments] = useState(false);
   const [commentedid, setCommentedid] = useState(null);
   const [resData, setResData] = useState(null);
+    const dispatch = useDispatch();
   const filteredRelatedVideos = useSelector(
     (state) => state.videoPlaying.videos
   );
@@ -116,8 +118,8 @@ function VideoPage() {
         setDislikedCount(response.data.video.dislikeCount);
       } catch (error) {
        localStorage.removeItem("user");
-       dispatch(setSettingsPageRequest()); 
-        Message(error.response?.data?.error || "An error occurred", "warning");
+       
+        Message((error.response?.data?.error === "Unauthorized, token not provided." ? "Please login to continue...!" : "Failed to login, Please Login") || "An error occurred", "warning");
         navigate("/login");
       }
     };

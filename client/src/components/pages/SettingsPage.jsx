@@ -1,73 +1,103 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MdOutlineAccountCircle } from "react-icons/md";
-import { IoLogInOutline, IoLogOutOutline } from "react-icons/io5";
-import { FiEdit3, FiPlusSquare } from "react-icons/fi";
+import {
+  MdOutlineAccountCircle,
+} from "react-icons/md";
+
+import {
+  IoLogInOutline,
+  IoLogOutOutline,
+} from "react-icons/io5";
+
+import {
+  FiEdit3,
+  FiPlusSquare,
+} from "react-icons/fi";
+
 import { RiRobot3Line } from "react-icons/ri";
 import { PiPassword } from "react-icons/pi";
 import { GrHistory } from "react-icons/gr";
-import defaultprofile from "/src/assets/defaultprofile.png";
-import { useNavigate } from "react-router";
 import { FaAngleDown } from "react-icons/fa";
-import {
-  changeTheme,
-  setChatBot,
-  setSettingsPageRequest,
-} from "../../reduxstore/slices";
-import Message from "../../utility/Message";
+
 import { motion, AnimatePresence } from "framer-motion";
+
+import { useNavigate } from "react-router";
+import { changeTheme, setChatBot, setSettingsPageRequest } from "../../reduxstore/slices";
+
+import cookies from "js-cookie";
 import axios from "axios";
 
+import defaultprofile from "/src/assets/defaultprofile.png";
+import Message from "../../utility/Message";
+
 const menuItems = [
-  { name: "Profile", icon: <MdOutlineAccountCircle /> },
-  { name: "Create a New Blog", icon: <FiPlusSquare /> },
-  { name: "Chat Bot", icon: <RiRobot3Line /> },
-  { name: "Change Password", icon: <PiPassword /> },
-  { name: "Theme", icon: <GrHistory /> },
+  {
+    name: "Profile",
+    icon: <MdOutlineAccountCircle />,
+  },
+  {
+    name: "Create a New Blog",
+    icon: <FiPlusSquare />,
+  },
+  {
+    name: "Chat Bot",
+    icon: <RiRobot3Line />,
+  },
+  {
+    name: "Change Password",
+    icon: <PiPassword />,
+  },
+  {
+    name: "Theme",
+    icon: <GrHistory />,
+  },
 ];
 
 function Settingspage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const theme = useSelector((state) => state.theme.currentTheme);
+
   const [showBlogType, setShowBlogType] = useState(false);
   const [showTheme, setshowtheme] = useState(false);
-  const dispatch = useDispatch();
+
+  const theme = useSelector(
+    (state) => state.theme.currentTheme
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
       const userData = localStorage.getItem("user");
+
       setUser(userData ? JSON.parse(userData) : null);
+
       setLoading(false);
-    }, 300); 
+    }, 400);
+
     return () => clearTimeout(timer);
   }, []);
 
   const handleLogout = async () => {
-   try {
-    setUser(null);
-       localStorage.removeItem("user");
-       dispatch(setSettingsPageRequest());
-       window.location.reload();
-       Message("Logged Out Successfully....!", "OK");
-     await axios.post(
-       `${import.meta.env.VITE_APP_BACKEND_URI}/logout`,
-       {},
-       { withCredentials: true }
-     );
-    
-   } catch (error) {
-          Message("Can't LogOut right Now...!", "warning")
-   }
-    finally{
-      setUser(null);
-      localStorage.removeItem("user");
-      dispatch(setSettingsPageRequest());
-      window.location.reload();
-      Message("Logged Out Successfully....!", "OK");
-    }
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_APP_BACKEND_URI}/logout`,
+        {},
+        { withCredentials: true }
+      );
 
+      cookies.remove("token");
+      localStorage.removeItem("user");
+
+      dispatch(setSettingsPageRequest());
+
+      Message("Logged Out Successfully!", "OK");
+
+      window.location.reload();
+    } catch (error) {
+      Message("Can't logout right now!", "warning");
+    }
   };
 
   const handleClicks = (item, index) => {
@@ -75,20 +105,21 @@ function Settingspage() {
       dispatch(setSettingsPageRequest());
       navigate(`/user/${user._id}`);
     }
-    if (item.navigateTo) {
-      navigate(item.navigateTo);
-    }
+
     if (index === 1) {
       setShowBlogType(!showBlogType);
     }
+
     if (index === 2) {
       dispatch(setSettingsPageRequest());
       dispatch(setChatBot());
     }
+
     if (index === 3) {
       navigate("/changepassword");
       dispatch(setSettingsPageRequest());
     }
+
     if (index === 4) {
       setshowtheme(!showTheme);
     }
@@ -100,143 +131,191 @@ function Settingspage() {
   };
 
   return (
-    <div className="w-full h-full text-[var(--text)] bg-[var(--bg-body)] py-4 flex flex-col gap-8 items-center transition-all duration-500 ease-linear">
-      {/* Profile Section with Loading */}
-      <div className="flex flex-col items-center">
-        {loading ? (
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-24 h-24 border-4 border-[var(--text)] border-t-transparent rounded-full animate-spin"></div>
-            <div className="w-32 h-6 bg-gray-400 dark:bg-gray-500 animate-pulse rounded mt-2"></div>
+    <div className="h-full text-[var(--text)] px-4 py-1 relative overflow-y-scroll overflow-x-hidden">
+
+      <div className="absolute bottom-[-10px] right-[-120px] w-[300px] h-[300px] bg-blue-600/20 blur-3xl rounded-full" />
+
+      <div className="max-w-2xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="backdrop-blur-2xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl overflow-hidden">
+          {/* Cover */}
+          <div className="h-32 bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600 relative">
+            <button
+              onClick={() => {
+                dispatch(setSettingsPageRequest(false));
+                navigate("/editprofile");
+              }}
+              className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 p-2 rounded-full transition"
+            >
+              <FiEdit3 className="text-white text-lg" />
+            </button>
           </div>
-        ) : (
-          <>
-            <div className="relative">
-              <img
-                src={user?.profile || defaultprofile}
-                alt="Profile"
-                className="max-w-24 min-w-24 object-cover object-top aspect-square p-[1px] bg-[var(--text)] rounded-full"
-              />
+
+          {/* Profile */}
+          <div className="px-6 pb-6 relative">
+            <div className="-mt-14 flex flex-col items-center">
+              {loading ? (
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-28 h-28 border-4 border-white border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : (
+                <>
+                  <img
+                    src={user?.profile || defaultprofile}
+                    alt="profile"
+                    className="w-28 h-28 rounded-full border-4 border-[#0f172a] object-cover shadow-xl"
+                  />
+
+                  <h2 className="mt-4 text-2xl font-bold capitalize">
+                    {user?.userName || "Guest"}
+                  </h2>
+
+                  <p className="text-[var(--text)] opacity-60 text-sm">
+                    Manage your account settings
+                  </p>
+                </>
+              )}
+            </div>
+
+            {/* Menu */}
+            <div className="mt-8 flex flex-col gap-4">
+              {menuItems.map((item, index) => (
+                <div key={index}>
+                  <button
+                    onClick={() => handleClicks(item, index)}
+                    className="
+                      w-full flex items-center justify-between
+                      px-5 py-2 rounded-2xl
+                      bg-white/5 border border-white/10
+                      hover:bg-white/10
+                      transition-all duration-300
+                      active:scale-[0.98]
+                    "
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="text-2xl text-cyan-400">
+                        {item.icon}
+                      </span>
+
+                      <span className="text-sm xl:text-md">{item.name}</span>
+                    </div>
+
+                    {(index === 1 || index === 4) && (
+                      <FaAngleDown
+                        className={`
+                          transition-all duration-300
+                          ${
+                            (index === 1 && showBlogType) ||
+                            (index === 4 && showTheme)
+                              ? "rotate-180"
+                              : ""
+                          }
+                        `}
+                      />
+                    )}
+                  </button>
+
+                  {/* Blog Dropdown */}
+                  <AnimatePresence>
+                    {index === 1 && showBlogType && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden pl-6 mt-3"
+                      >
+                        <div className="flex flex-col gap-3">
+                          <button
+                            onClick={() => handleBlogPost("blogvideo")}
+                            className="bg-white/5 hover:bg-white/10 px-4 py-3 rounded-xl text-left transition"
+                          >
+                            🎥 Video Blog
+                          </button>
+
+                          <button
+                            onClick={() => handleBlogPost("blogimg")}
+                            className="bg-white/5 hover:bg-white/10 px-4 py-3 rounded-xl text-left transition"
+                          >
+                            🖼️ Image Blog
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Theme Dropdown */}
+                  <AnimatePresence>
+                    {index === 4 && showTheme && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden pl-6 mt-3"
+                      >
+                        <div className="flex flex-col gap-3">
+                          <button
+                            onClick={() => dispatch(changeTheme("bright"))}
+                            className={`
+                              px-4 py-3 rounded-xl text-left transition
+                              ${
+                                theme === "bright"
+                                  ? "bg-cyan-500 text-white"
+                                  : "bg-white/5 hover:bg-white/10"
+                              }
+                            `}
+                          >
+                            ☀️ Bright Mode
+                          </button>
+
+                          <button
+                            onClick={() => dispatch(changeTheme("dark"))}
+                            className={`
+                              px-4 py-3 rounded-xl text-left transition
+                              ${
+                                theme === "dark"
+                                  ? "bg-cyan-500 text-white"
+                                  : "bg-white/5 hover:bg-white/10"
+                              }
+                            `}
+                          >
+                            🌙 Dark Mode
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+
+              {/* Logout/Login */}
               <button
-                className="absolute right-0 top-0 p-1 hover:scale-105 transition-all duration-75 ease-in-out"
-                onClick={() => {
-                  dispatch(setSettingsPageRequest(false));
-                  navigate("/editprofile");
-                }}
+                onClick={() =>
+                  user
+                    ? handleLogout()
+                    : (navigate("/login"), dispatch(setSettingsPageRequest()))
+                }
+                className="
+                  mb-12 mt-2 w-full flex items-center gap-4
+                  px-5 py-3 rounded-2xl
+                  bg-red-500/10 border border-red-500/20
+                  hover:bg-red-500/20
+                  transition-all duration-300
+                  active:scale-[0.98]
+                "
               >
-                <FiEdit3 />
+                <span className="text-2xl text-red-400">
+                  {user ? <IoLogOutOutline /> : <IoLogInOutline />}
+                </span>
+
+                <span className="font-semibold xl:text-lg">
+                  {user ? "Logout" : "Login"}
+                </span>
               </button>
             </div>
-            <h2 className="p-2 text-xl font-semibold capitalize">
-              {user?.userName || "Guest"}
-            </h2>
-          </>
-        )}
-      </div>
-
-      {/* Menu Items */}
-      <div className="flex flex-col w-full bg-[var(--bg-card)] h-full">
-        {menuItems.map((item, index) => (
-          <div key={index} className="border-t">
-            <button
-              className="w-full flex gap-6 items-center px-12 py-3 transition-all duration-75 ease-in hover:bg-[var(--bg-body)] hover:shadow-sm active:scale-95"
-              onClick={() => handleClicks(item, index)}
-            >
-              <span className="text-2xl">{item.icon}</span>
-              <span className="text-lg capitalize font-semibold">
-                {item.name}
-              </span>
-              {(index === 1 || index === 4) && (
-                <span
-                  className={`text-2xl text-[var(--text)] ${
-                    (index === 1 && showBlogType) ||
-                    (index === 4 && showTheme)
-                      ? "rotate-180"
-                      : ""
-                  } transition-all duration-75 ease-in-out`}
-                >
-                  <FaAngleDown />
-                </span>
-              )}
-            </button>
-
-            {/* Dropdown for Blog Types */}
-            <AnimatePresence>
-              {index === 1 && showBlogType && (
-                <motion.div
-                  initial={{ scaleY: 0 }}
-                  animate={{ scaleY: 1 }}
-                  exit={{ scaleY: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  style={{ transformOrigin: "top" }}
-                  className="flex flex-col gap-2"
-                >
-                  <button
-                    className="text-sm font-bold px-4 rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in"
-                    onClick={() => handleBlogPost("blogvideo")}
-                  >
-                    Video Blog
-                  </button>
-                  <button
-                    className="px-4 text-sm font-bold rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in"
-                    onClick={() => handleBlogPost("blogimg")}
-                  >
-                    Image Blog
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Dropdown for Theme */}
-            <AnimatePresence>
-              {index === 4 && showTheme && (
-                <motion.div
-                  initial={{ scaleY: 0 }}
-                  animate={{ scaleY: 1 }}
-                  exit={{ scaleY: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  style={{ transformOrigin: "top" }}
-                  className="flex flex-col gap-2"
-                >
-                  <button
-                    className="flex items-center justify-center gap-2 text-sm font-bold px-4 rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in"
-                    onClick={() => dispatch(changeTheme("bright"))}
-                  >
-                    {theme === "bright" && (
-                      <span className="h-2 w-2 bg-[var(--text)] rounded-full"></span>
-                    )}
-                    <span>Bright mode</span>
-                  </button>
-                  <button
-                    className="flex items-center justify-center gap-2 px-4 text-sm font-bold rounded hover:bg-[var(--bg-body)] transition duration-75 ease-in"
-                    onClick={() => dispatch(changeTheme("dark"))}
-                  >
-                    {theme === "dark" && (
-                      <span className="h-2 w-2 bg-[var(--text)] rounded-full"></span>
-                    )}
-                    <span>Dark mode</span>
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
-        ))}
-
-        {/* Login / Logout Button */}
-        <button
-          className="w-full flex gap-6 items-center px-12 py-3 transition-all duration-75 ease-in hover:bg-[var(--bg-body)] hover:shadow-sm active:scale-95 border-y"
-          onClick={() =>
-            user
-              ? handleLogout()
-              : (navigate("/login"), dispatch(setSettingsPageRequest()))
-          }
-        >
-          <span className="text-2xl">
-            {user ? <IoLogOutOutline /> : <IoLogInOutline />}
-          </span>
-          <span className="text-lg capitalize font-semibold">
-            {user ? "Logout" : "Login"}
-          </span>
-        </button>
+        </div>
       </div>
     </div>
   );

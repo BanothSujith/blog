@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const handleSelectedVideo = async (req, res) => {
   const videoId = req.params.video;
   const userId = req.user?.id; 
+  // console.log("Received videoId:", videoId, "userId:", userId);
 
   if (!videoId || !mongoose.Types.ObjectId.isValid(videoId)) {
     return res.status(400).json({ message: "Invalid request" });

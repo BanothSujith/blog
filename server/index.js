@@ -10,21 +10,24 @@ const checker = require("./middleware/checker");
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: [
-    "https://blog-front-end-gilt.vercel.app",
-    "http://localhost:5173",
-    "http://192.168.1.2:5173",
-    "https://sujithblog.vercel.app"
-  ],
+app.use(
+  cors({
+    origin: [
+      "https://blog-front-end-gilt.vercel.app",
+      "http://localhost:5173",
+      "http://192.168.1.2:5173",
+      "https://sujithblog.vercel.app",
+      "http://192.168.31.237:5173/",
+    ],
 
-  credentials: true,
-}));
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 
 connection(process.env.MONGODB_URI);
-app.use(checker);
+// app.use(checker);
 app.use("/", routes);
 
 app.get("/test",(req, res) => {

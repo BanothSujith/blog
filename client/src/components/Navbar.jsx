@@ -43,7 +43,7 @@ function Navbar() {
 
   return (
     <div>
-      <nav className="w-full md:h-14 h-12 py-2 md:py-3 px-1 md:px-6 bg-[var(--navbar)]  flex md:gap-20  items-center justify-between">
+      <nav className="w-full md:h-14 h-12 py-2 md:py-3 px-1 md:px-6 bg-[var(--navbar)]  flex md:gap-20  items-center justify-between shadow-xl">
         {/* Logo */}
         <div className="h-12 md:h-14 ">
           <img

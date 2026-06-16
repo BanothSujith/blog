@@ -8,21 +8,23 @@
     --bg-body:#f3f4f6;
     --bg-card: #ffffff;
     --text:#0B090A;
-    --navbar :#D3D3D3;
+    --navbar :#f1f8ff;
     --smallcard:#a7b8bac8;
     --inputBg:#f3f4f5;
     --border:black;
     --shodow : #000000;
+    --shadow-2t :  #4e3ea8;;
 }
 .dark{
     --bg-body:#000000;
     --bg-card: #000000;
     --text: #F5F3F4;
-    --navbar :#161A1D;
+    --navbar :#1b1e20;
     --smallcard :#3A3F44;
     --inputBg:#292c2e;
     --border:#bdbaba;
       --shodow : #ffffff4b;
+      --shadow-2t : #01c4ff2a;
 }
 .hidescroolbar{
     scrollbar-width: none;

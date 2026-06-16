@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
 import Message from "../../utility/Message";
 import Loading3 from "./Loading3";
-import { useNavigate } from "react-router";
 
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState("");
   const [coverImg, setCoverImg] = useState("");
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
+
   const handleRegister = async (e) => {
     e.preventDefault();
+
     if (!name || !email || !phoneNo || !password || !profile) {
       Message("All fields are required.", "warning");
       return;
@@ -22,6 +25,7 @@ function Register() {
 
     try {
       setLoading(true);
+
       const response = await axios.post(
         `${import.meta.env.VITE_APP_BACKEND_URI}/register`,
         {
@@ -40,10 +44,11 @@ function Register() {
       );
 
       if (response.data.success) {
-        Message("Registration successful! Redirecting to login...", "OK");
+        Message("Registration successful! Redirecting...", "OK");
+
         setTimeout(() => {
           setLoading(false);
-          navigate( "/login");
+          navigate("/login");
         }, 300);
       } else {
         Message(response.data?.message || "Registration failed.", "error");
@@ -51,114 +56,164 @@ function Register() {
       }
     } catch (error) {
       console.error(error);
+
       Message(
         error.response?.data?.message || "Something went wrong.",
         "error"
       );
+
       setLoading(false);
     }
   };
+
   return (
-    <div className="text-[var(--text)] bg-[var(--bg-body)] h-screen flex items-center justify-center ">
-      <div className="bg-[var(--bg-card)]  rounded-md shadow-lg  p-8 backdrop-filter backdrop-blur-md bg-opacity-30 relative">
-        <div
-          className="absolute top-1 right-1 bg-red-600 w-3 flex items-center justify-center text-white h-3 text-xs pb-[1px] rounded-full hover:bg-red-900 active:scale-95 transition-all duration-75 ease-linear cursor-pointer"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1e293b] px-4 overflow-hidden relative">
+      
+      {/* Background Glow */}
+      <div className="absolute w-[400px] h-[400px] bg-blue-500/20 blur-3xl rounded-full top-[-100px] left-[-100px]" />
+      <div className="absolute w-[350px] h-[350px] bg-pink-500/20 blur-3xl rounded-full bottom-[-100px] right-[-100px]" />
+
+      <div className="relative z-10 w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8">
+        
+        {/* Close Button */}
+        <button
           onClick={() => window.history.back()}
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all duration-200 active:scale-95"
         >
-          x
+          ✕
+        </button>
+
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-white">
+            Create Account
+          </h1>
+
+          <p className="text-gray-300 mt-2 text-sm">
+            Join and start your journey today
+          </p>
         </div>
-        <h1 className="text-4xl font-bold text-center">Register</h1>
-        <form onSubmit={handleRegister}>
-          <div className="relative my-4">
-            <input
-              type="file"
-              accept="image/*"
-              className="block w-72 py-2.5 px-0 text-sm text-[var(--text)] bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder="select profile pic"
-              onChange={(e) => setProfile(e.target.files[0])}
-            />
-            <label className="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              profile picture
+
+        <form onSubmit={handleRegister} className="space-y-5">
+
+          {/* Profile Upload */}
+          <div>
+            <label className="text-sm text-gray-300 block mb-2">
+              Profile Picture
             </label>
-          </div>
-          <div className="relative my-4">
-            <input
-              type="file"
-              accept="image/*"
-              className="block w-72 py-2.5 px-0 text-sm text-[var(--text)] bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder="select profile pic"
-              onChange={(e) => setCoverImg(e.target.files[0])}
-            />
-            <label className="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              cover Image{" "}
+
+            <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:border-blue-400 transition-all bg-white/5">
+              <div className="text-center">
+                <p className="text-white text-sm">
+                  {profile ? profile.name : "Upload Profile Image"}
+                </p>
+              </div>
+
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => setProfile(e.target.files[0])}
+              />
             </label>
           </div>
 
-          {/* Name Input */}
-          <div className="relative my-4">
-            <input
-              type="text"
-              className="block w-72 py-2.5 px-0 text-sm text-[var(--text)] bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=""
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <label className="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              Name
+          {/* Cover Upload */}
+          <div>
+            <label className="text-sm text-gray-300 block mb-2">
+              Cover Image
+            </label>
+
+            <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:border-pink-400 transition-all bg-white/5">
+              <div className="text-center">
+                <p className="text-white text-sm">
+                  {coverImg ? coverImg.name : "Upload Cover Image"}
+                </p>
+              </div>
+
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => setCoverImg(e.target.files[0])}
+              />
             </label>
           </div>
 
-          {/* Email Input */}
-          <div className="relative my-4">
-            <input
-              type="email"
-              className="block w-72 py-2.5 px-0 text-sm text-[var(--text)] bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=""
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <label className="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              Email
-            </label>
-          </div>
+          {/* Name */}
+          <InputField
+            type="text"
+            placeholder="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-          {/* Phone Number Input */}
-          <div className="relative my-4">
-            <input
-              type="text"
-              className="block w-72 py-2.5 px-0 text-sm text-[var(--text)] bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=""
-              value={phoneNo}
-              onChange={(e) => setPhoneNo(e.target.value)}
-            />
-            <label className="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              Phone Number
-            </label>
-          </div>
+          {/* Email */}
+          <InputField
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-          {/* Password Input */}
-          <div className="relative my-4">
-            <input
-              type="password"
-              className="block w-72 py-2.5 px-0 text-sm text-[var(--text)] bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=""
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <label className="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              Password
-            </label>
-          </div>
+          {/* Phone */}
+          <InputField
+            type="text"
+            placeholder="Phone Number"
+            value={phoneNo}
+            onChange={(e) => setPhoneNo(e.target.value)}
+          />
 
-          {/* Register Button */}
+          {/* Password */}
+          <InputField
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          {/* Button */}
           <button
             type="submit"
-            className="w-full mb-5 mt-5 text-[18px] rounded bg-blue-500 py-2 hover:bg-blue-600 transition-colors duration-300 flex justify-center "
+            className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold text-lg shadow-lg hover:scale-[1.02] hover:shadow-blue-500/30 transition-all duration-300 active:scale-95 flex items-center justify-center"
           >
-            {loading ? <Loading3 /> : "REGISTER"}
+            {loading ? <Loading3 /> : "Create Account"}
           </button>
+
+          {/* Login Redirect */}
+          <p className="text-center text-gray-300 text-sm">
+            Already have an account?{" "}
+            <span
+              onClick={() => navigate("/login")}
+              className="text-cyan-400 hover:text-cyan-300 cursor-pointer"
+            >
+              Login
+            </span>
+          </p>
         </form>
       </div>
+    </div>
+  );
+}
+
+function InputField({ type, placeholder, value, onChange }) {
+  return (
+    <div>
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        className="
+          w-full h-12 px-4 rounded-xl
+          bg-white/10 border border-white/20
+          text-white placeholder-gray-400
+          outline-none
+          focus:border-cyan-400
+          focus:ring-2 focus:ring-cyan-400/30
+          transition-all duration-300
+        "
+      />
     </div>
   );
 }

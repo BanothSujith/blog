@@ -45,11 +45,11 @@ router.post(
 );
 
 router.post('/api/login',handleLogin );
-router.get('/api/blogs',handleBlog);
+// router.get('/api/blogs',handleBlog);
 
 router.post("/api/:video/comments", authorized, handleBlogPostComments);
 
-router.get("/api/video/:video", handleSelectedVideo);
+router.get("/api/video/:video",authorized, handleSelectedVideo);
 
 router.get("/api/user/:userId", authorized, handleUserDetails);
 

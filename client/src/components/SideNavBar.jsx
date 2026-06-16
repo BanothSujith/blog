@@ -1,111 +1,147 @@
-import React, {
-  useState,
-  Suspense,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { IoHomeOutline } from "react-icons/io5";
-import { PiVideoDuotone } from "react-icons/pi";
 import { PiImagesSquareFill } from "react-icons/pi";
 import { GrNewWindow } from "react-icons/gr";
 import { MdOutlineAccountCircle } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
-import cookies from "js-cookie";
-const BlogType = React.lazy(() => import("./pages/BlogType"));
+import { motion, AnimatePresence } from "framer-motion";
+import BlogType from "./pages/BlogType";
+
 function SideNavBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [visible, setVisible] = useState(true);
   const [showBlogType, setShowBlogType] = useState(false);
-  const dropdownRef = useRef(null);
-  const [initialAnimation, setInitialAnimation] = useState({ x: -10 });
-  const [animate, setAnimate] = useState({ x: 0 });
-  const userid = localStorage.getItem("user") ? JSON.parse( localStorage.getItem("user")) : "null";
-  const mySideNavBar = [
-    { icon: IoHomeOutline, label: "Home", navigator: "/" },
-    // { icon: PiVideoDuotone, label: "Videos", navigator: "/videos" },
-    { icon: PiImagesSquareFill, label: "Gallery", navigator: "/gallery" },
-    { icon: GrNewWindow, label: "New Post", navigator: "/create" },
-    { icon: MdOutlineAccountCircle, label: "Profile", navigator: `/user/${userid?._id}` },
+const timerRef = useRef(null);
+  const userid = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null;
+
+  const items = [
+    { icon: IoHomeOutline, label: "Home", path: "/" },
+    { icon: PiImagesSquareFill, label: "Gallery", path: "/gallery" },
+    { icon: GrNewWindow, label: "Create", path: "/create" },
+    {
+      icon: MdOutlineAccountCircle,
+      label: "Profile",
+      path: `/user/${userid?._id}`,
+    },
   ];
-
-  useEffect(() => {
-    if(window.innerWidth<500) {setInitialAnimation({y:10}), setAnimate({y:0})}
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowBlogType(false);
-      }
-    }
-
-    function handleScroll() {
+  const handleNavigation = (path, label) => {
+    if (label === "Create") {
+      setShowBlogType((prev) => !prev);
+    } else {
+      navigate(path);
       setShowBlogType(false);
     }
+  }
+useEffect(() => {
+  const hideNavbar = () => {
+    clearTimeout(timerRef.current);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    window.addEventListener("scroll", handleScroll);
+    timerRef.current = setTimeout(() => {
+      setVisible(false);
+      setShowBlogType(false);
+    }, 1000);
+  };
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  hideNavbar();
 
-  const handleButtonClick = useCallback(
-    (label, navigator) => {
-      if (label === "New Post") {
-        setShowBlogType((prev) => !prev);
-      } else {
-        setShowBlogType(false);
-        navigate(navigator);
-      }
-    },
-    [navigate]
-  );
+  const handleMove = (e) => {
+    if (e.clientX > 100 && e.clientX < 500) {
+      setVisible(true);
+      hideNavbar();
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches[0].clientX > 100) {
+      setVisible(true);
+      hideNavbar();
+    }
+  };
+
+  window.addEventListener("mousemove", handleMove);
+  window.addEventListener("touchmove", handleTouchMove);
+
+  return () => {
+    window.removeEventListener("mousemove", handleMove);
+    window.removeEventListener("touchmove", handleTouchMove);
+
+    clearTimeout(timerRef.current);
+  };
+}, []);
+
 
   return (
-    <div className="lg:h-screen bg-[var(--navbar)]  lg:w-20 py-2  md:py-4 lg:px-4 flex flex-col">
-      <div className="flex justify-between  w-full px-4 md:px-12 lg:px-0 gap-6 lg:flex-col  ">
-        {mySideNavBar.map(({ icon: Icon, label, navigator }, index) => {
-          const isActive =
-            navigator === "/"
-              ? location.pathname === navigator
-              : location.pathname.startsWith(navigator);
+    <div
+      className="fixed left-2 top-0 h-full flex items-center z-50"
+      onMouseEnter={() => {
+        setVisible(true);
+        clearTimeout(timerRef.current);
+      }}
+      onMouseLeave={() => {
+        timerRef.current = setTimeout(() => {
+          setVisible(false);
+          setShowBlogType(false);
+        }, 1000);
+      }}
+    >
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="
+              flex flex-col gap-5
+              bg-[var(--navbar)]
+              px-3 py-4
+              rounded-2xl
+              shadow-xl
+              backdrop-blur-xl
+              border border-white/10
+            "
+          >
+            {items.map((item, i) => {
+              const Icon = item.icon;
+              const active = location.pathname === item.path;
 
-          return (
-            <div key={index} className="relative">
-              <button
-                className={`flex flex-col items-center transition duration-300 ${
-                  isActive
-                    ? "text-blue-500 font-bold"
-                    : "hover:text-gray-800 text-[var(--text)]"
-                }`}
-                onClick={() => handleButtonClick(label, navigator)}
-              >
-                <Icon className="w-6  h-6 lg:w-8 lg:h-8" />
-                <span className="text-xs md:text-sm line-clamp-1 font-bold lg:mt-1">
-                  {label}
-                </span>
-              </button>
-
-              {label === "New Post" && showBlogType && (
-                <Suspense fallback={<div>Loading...</div>}>
-                  <motion.div
-                    ref={dropdownRef}
-                    initial={{ opacity: 0, ...initialAnimation }}
-                    animate={{ opacity: 1, ...animate }}
-                    exit={{ opacity: 0, ...initialAnimation }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="absolute -left-4 lg:left-12 bottom-14  lg:-top-4  bg-white shadow-lg rounded-md"
-                  >
-                    <BlogType setShowBlogType={setShowBlogType} />
-                  </motion.div>
-                </Suspense>
-              )}
-            </div>
-          );
-        })}
-      </div>
+              return (
+                <button
+                  key={i}
+                  onClick={() => handleNavigation(item.path, item.label)}
+                  className={`
+                    w-10 h-10 flex items-center justify-center
+                    rounded-xl transition relative
+                    ${
+                      active
+                        ? "bg-blue-500/20 text-blue-500"
+                        : "text-[var(--text)] hover:bg-white/10"
+                    }
+                  `}
+                >
+                  <Icon className="w-5 h-5" />
+                  {showBlogType && i === 2 && (
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 10 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                        className="absolute left-full z-50"
+                      >
+                        <BlogType setShowBlogType={setShowBlogType} />
+                      </motion.div>
+                    </Suspense>
+                  )}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

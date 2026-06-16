@@ -10,7 +10,7 @@ const safeParseJSON = (key, defaultValue) => {
   }
 };
 
-const savedTheme = localStorage.getItem("theme") || "bright";
+const savedTheme = localStorage.getItem("theme") || "dark";
 const savedVideos = safeParseJSON("videos", []);
 const savedGalleryVideos = safeParseJSON("gallery", []);
 

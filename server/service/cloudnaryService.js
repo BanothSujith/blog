@@ -15,6 +15,10 @@ cloudinary.config({
    fs.unlinkSync(localFileName);
 
     // console.log(response.url);
+    if (response?.url.startsWith("http://")) {
+      response.url = response.url.replace("http://", "https://");
+    }
+
     return response.url;
   } catch (error) {
     console.error('Error uploading to Cloudinary:', error);

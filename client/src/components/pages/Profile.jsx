@@ -47,7 +47,7 @@ const Profilepage = () => {
   );
 
   return (
-    <div className="h-full bg-[var(--bg-color)] overflow-auto pb-12">
+    <div className="h-full overflow-auto pb-8">
       {/* Background Image and Profile */}
       <div className="relative h-[20vh] lg:h-[40vh]">
         <img
@@ -95,7 +95,7 @@ const Profilepage = () => {
       </div>
 
       {/* Blog Cards */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-12 md:p-4">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:p-4">
         {filteredList.length > 0 ? (
           filteredList.map((blog) => (
             <ProfileCards key={blog._id} blog={blog} setResData={setResData} />

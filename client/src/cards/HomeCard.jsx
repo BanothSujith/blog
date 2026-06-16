@@ -22,7 +22,7 @@ function HomeCard({ item }) {
         />
       </div>
 
-      <div className="flex flex-col  px-2">
+      <div className="flex flex-col  px-2 py-1">
         <div className="relative flex items-center gap-3 h-full">
           {isprofileloading && (
             <div className="w-[clamp(2.1rem,2vw,150px)] aspect-square bg-[var(--smallcard)] rounded-full animate-pulse absolute top-2 left-0 z-0" />
@@ -42,8 +42,8 @@ function HomeCard({ item }) {
         </div>
 
         <div className="flex flex-col px-12 pb-2 gap-1 justify-center items-start">
-          <p className="text-[max(0.9rem,1vw)] text-[#132c44] font-semibold line-clamp-1">
-            -{item?.userName}
+          <p className="text-[max(0.9rem,1vw)] text-[#164775] font-semibold line-clamp-1 capitalize">
+            ~{item?.userName}
           </p>
           <p className="text-[max(0.7rem,.7vw)] line-clamp-1 flex gap-3">
             <span>{item.views} views</span>

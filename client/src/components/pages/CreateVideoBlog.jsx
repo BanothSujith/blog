@@ -105,97 +105,228 @@ function CreateVideoBlog() {
     },
   });
 
-  return (
-    <div className="lg:p-4 flex flex-col gap-8 items-center h-screen overflow-hidden  ">
-      <form
-        onSubmit={handleSubmit}
-        className="relative space-y-6 bg-[var(--bg-card)] p-4 rounded-lg h-full overflow-auto hidescroolbar"
-      >
-        {/* Video Upload */}
-        <div
-          className="absolute top-1 right-1 bg-red-600 w-3 flex items-center justify-center text-white h-3 text-xs pb-[1px] rounded-full hover:bg-red-900 active:scale-95 transition-all duration-75 ease-linear cursor-pointer"
-          onClick={() => window.history.back()}
-        >
-          x
-        </div>
-        <h1 className=" text-3xl capitalize text-center font-bold text-[var(--text)] ">
-          upload video blog
-        </h1>
-        <div
-          {...getVideoRootProps()}
-          className={`w-[20rem] md:w-[32rem]  border-2 border-dashed rounded-xl p-16 text-center cursor-pointer transition ${
-            isVideoDragActive
-              ? "border-blue-500 bg-blue-100"
-              : "border-[var(--border)]  hover:bg-[var(--inputBg)]"
-          }`}
-        >
-          <BsCloudUpload className="text-4xl text-[var(--text)] mb-2 mx-auto opacity-25" />
-          <input {...getVideoInputProps()} accept="video/*" />
-          {video ? (
-            <p className="text-[var(--text)]  font-bold">{video.name}</p>
-          ) : (
-            <p className="text-[var(--text)] font-bold opacity-20">
-              Drag & Drop or Click to upload video
-            </p>
-          )}
-        </div>
-        {/* Thumbnail Upload */}
+ return (
+   <div className="h-screen bg-[#0a0a0a] text-white flex items-cente justify-center px-4 py-2 overflow-hidden">
+     <form
+       onSubmit={handleSubmit}
+       className="
+        w-full max-w-[60rem]
+        grid lg:grid-cols-2
+        rounded-[2rem]
+        overflow-scroll
+        overflow-x-hidden
+        hidescroolbar
 
-        <div
-          {...getThumbnailRootProps()}
-          className={`w-[20rem] md:w-[32rem] border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition ${
-            isVideoDragActive
-              ? "border-blue-500 bg-blue-100"
-              : "border-[var(--border)]  hover:bg-[var(--inputBg)]"
-          }`}
-        >
-          <BsCloudUpload className="text-4xl text-[var(--text)] mb-2 mx-auto opacity-25" />
-          <input {...getThumbnailInputProps()} accept="image/*" />
+        border border-white/10
+        bg-[#111]
+        shadow-[0_0_80px_rgba(0,0,0,0.6)]
+      "
+     >
+       {/* LEFT SIDE */}
+       <div className="relative p-8 md:p-10 border-r border-white/10">
+         {/* Close */}
+         <button
+           type="button"
+           onClick={() => window.history.back()}
+           className="
+            absolute top-5 right-5
+            w-9 h-9
+            rounded-full
+            bg-white/5
+            hover:bg-red-500
+            transition-all duration-300
+          "
+         >
+           ✕
+         </button>
 
-          {coverImg ? (
-            <p className="text-[var(--text)] font-bold ">{coverImg.name}</p>
-          ) : (
-            <p className="text-[var(--text)] font-bold opacity-20">
-              Drag & Drop or Click to upload thumbnail
-            </p>
-          )}
-        </div>
-        <div>
-          <label className=" text-xl tracking-wider text-[var(--text)] font-semibold">
-            Title
-          </label>
-          <input
-            type="text"
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full hover:bg-[var(--bg-body)]  p-3 border-[1.5px] border-[var(--border)] rounded-lg outline-none bg-transparent focus:bg-[var(--inputBg) text-[var(--text)]"
-          />
-        </div>
+         <div className="mb-10">
+           <p className="uppercase tracking-[0.3em] text-xs text-zinc-500 mb-3">
+             Creator Studio
+           </p>
 
-        {/* Description */}
-        <div>
-          <label className="text-xl tracking-wider text-[var(--text)] font-semibold">
-            Description
-          </label>
-          <textarea
-            required
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full p-3 border-[1.5px] text-[var(--text)] border-[var(--border)] outline-none bg-transparent rounded-lg hover:bg-[var(--bg-body)] scrollbar"
-            rows="4"
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          onClick={handleSubmit}
-          className="w-full border border-[#511616]  text-[var(--text)] text-lg  font-semibold py-3 rounded-xl hover:bg-[var(--bg-body)] active:scale-95 transition-all duration-95 ease-linear"
-        >
-          {loading ? "Uploading..." : "Upload"}
-        </button>
-      </form>
-    </div>
-  );
+           <h1 className="text-5xl font-black leading-tight">
+             Upload
+             <span className="block text-zinc-500">Video Blog</span>
+           </h1>
+         </div>
+
+         {/* Video Upload */}
+         <div
+           {...getVideoRootProps()}
+           className={`
+            group
+            relative
+            h-[260px]
+            rounded-3xl
+            border
+            overflow-hidden
+            cursor-pointer
+            transition-all duration-500
+            flex flex-col items-center justify-center
+            ${
+              isVideoDragActive
+                ? "border-cyan-400 bg-cyan-400/10"
+                : "border-white/10 hover:border-cyan-500"
+            }
+          `}
+         >
+           <input {...getVideoInputProps()} accept="video/*" />
+
+           <div
+             className="
+              absolute inset-0
+              bg-gradient-to-br
+              from-cyan-500/10
+              via-transparent
+              to-transparent
+              opacity-0
+              group-hover:opacity-100
+              transition-all duration-500
+            "
+           />
+
+           <BsCloudUpload className="text-7xl text-cyan-400 mb-5 z-10" />
+
+           {video ? (
+             <div className="z-10 text-center px-4">
+               <p className="font-bold text-lg break-all">{video.name}</p>
+
+               <p className="text-zinc-500 text-sm mt-2">
+                 Video ready to upload
+               </p>
+             </div>
+           ) : (
+             <div className="z-10 text-center">
+               <p className="text-2xl font-bold">Drop your video</p>
+
+               <p className="text-zinc-500 mt-2">MP4, WEBM, MOV supported</p>
+             </div>
+           )}
+         </div>
+
+         {/* Thumbnail */}
+         <div
+           {...getThumbnailRootProps()}
+           className="
+            mt-6
+            group
+            border border-white/10
+            hover:border-pink-500
+            transition-all duration-500
+            rounded-2xl
+            p-5
+            flex items-center gap-5
+            cursor-pointer
+          "
+         >
+           <input {...getThumbnailInputProps()} accept="image/*" />
+
+           <div
+             className="
+              min-w-[70px]
+              h-[70px]
+              rounded-2xl
+              bg-pink-500/10
+              flex items-center justify-center
+            "
+           >
+             <BsCloudUpload className="text-3xl text-pink-400" />
+           </div>
+
+           <div>
+             <p className="font-semibold text-lg">
+               {coverImg ? coverImg.name : "Upload Thumbnail"}
+             </p>
+
+             <p className="text-zinc-500 text-sm mt-1">PNG, JPG, WEBP</p>
+           </div>
+         </div>
+       </div>
+
+       {/* RIGHT SIDE */}
+       <div className="p-8 md:p-10 flex flex-col justify-between">
+         <div className="space-y-8">
+           {/* Title */}
+           <div className="relative">
+             <label className="text-sm text-zinc-500 uppercase tracking-[0.2em]">
+               Title
+             </label>
+
+             <input
+               type="text"
+               required
+               value={title}
+               onChange={(e) => setTitle(e.target.value)}
+               placeholder="Enter title..."
+               className="
+                w-full
+                mt-3
+                bg-transparent
+                border-b border-white/10
+                focus:border-cyan-500
+                outline-none
+                py-4
+                text-3xl
+                font-bold
+                transition-all
+              "
+             />
+           </div>
+
+           {/* Description */}
+           <div>
+             <label className="text-sm text-zinc-500 uppercase tracking-[0.2em]">
+               Description
+             </label>
+
+             <textarea
+               required
+               value={content}
+               onChange={(e) => setContent(e.target.value)}
+               rows="10"
+               placeholder="Write something amazing..."
+               className="
+                w-full
+                mt-3
+                bg-[#0d0d0d]
+                border border-white/10
+                focus:border-cyan-500
+                rounded-3xl
+                p-6
+                outline-none
+                resize-none
+                text-lg
+                transition-all duration-300
+              "
+             />
+           </div>
+         </div>
+
+         {/* Submit */}
+         <button
+           type="submit"
+           disabled={loading}
+           className="
+            mt-10
+            h-16
+            rounded-2xl
+            text-lg
+            font-bold
+            bg-white
+            text-black
+            hover:bg-cyan-400
+            hover:shadow-[0_0_40px_rgba(34,211,238,0.4)]
+            transition-all duration-300
+            active:scale-[0.98]
+          "
+         >
+           {loading ? "Uploading..." : "Publish Video"}
+         </button>
+       </div>
+     </form>
+   </div>
+ );
 }
 
 export default CreateVideoBlog;

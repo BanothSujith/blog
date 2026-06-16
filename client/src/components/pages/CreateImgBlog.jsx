@@ -74,71 +74,213 @@ function CreateImgBlog() {
     },
   });
 
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-[var(--bg-body)] text-[var(--text)]">
-      <form
-        onSubmit={handleSubmit}
-        className="relative bg-[var(--bg-card)] p-6 rounded-lg shadow-md w-96 space-y-4"
-      >
-          <div className="absolute top-1 right-1 bg-red-600 w-3 flex items-center justify-center text-white h-3 text-xs pb-[1px] rounded-full hover:bg-red-900 active:scale-95 transition-all duration-75 ease-linear cursor-pointer" onClick={()=>window.history.back()}>
-          x
+return (
+  <div className="h-screen bg-[#0a0a0a] text-white flex  justify-center px-4 py-2">
+    <form
+      onSubmit={handleSubmit}
+      className="
+        w-full max-w-5xl
+        grid lg:grid-cols-2
+        overflow-scroll
+        overflow-x-hidden
+        hidescroolbar
+        rounded-[2rem]
+        border border-white/10
+        bg-[#111]
+        shadow-[0_0_80px_rgba(0,0,0,0.6)]
+      "
+    >
+      {/* LEFT SIDE */}
+      <div className="relative p-8 md:p-10 border-r border-white/10">
+        {/* Close Button */}
+        <button
+          type="button"
+          onClick={() => window.history.back()}
+          className="
+            absolute top-5 right-5
+            w-9 h-9
+            rounded-full
+            bg-white/5
+            hover:bg-red-500
+            transition-all duration-300
+          "
+        >
+          ✕
+        </button>
+
+        {/* Heading */}
+        <div className="mb-10">
+          <p className="uppercase tracking-[0.3em] text-xs text-zinc-500 mb-3">
+            Creator Studio
+          </p>
+
+          <h1 className="text-5xl font-black leading-tight">
+            Upload
+            <span className="block text-zinc-500">
+              Image Blog
+            </span>
+          </h1>
         </div>
-        <h2 className="text-2xl font-semibold text-center">Upload Image Blog</h2>
-        {/* Thumbnail Upload */}
+
+        {/* Upload Area */}
         <div
           {...getThumbnailRootProps()}
-          className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition ${
-            isThumbnailDragActive
-              ? "border-blue-500 bg-blue-100"
-              : "border-[var(--border)] hover:bg-[var(--inputBg)]"
-          }`}
+          className={`
+            group
+            relative
+            h-[350px]
+            rounded-3xl
+            border
+            overflow-hidden
+            cursor-pointer
+            transition-all duration-500
+            flex flex-col items-center justify-center
+            ${
+              isThumbnailDragActive
+                ? "border-pink-400 bg-pink-400/10"
+                : "border-white/10 hover:border-pink-500"
+            }
+          `}
         >
-          <BsCloudUpload className="text-4xl text-[var(--text)] mb-2 mx-auto" />
           <input {...getThumbnailInputProps()} accept="image/*" />
 
+          {/* Glow */}
+          <div
+            className="
+              absolute inset-0
+              bg-gradient-to-br
+              from-pink-500/10
+              via-transparent
+              to-transparent
+              opacity-0
+              group-hover:opacity-100
+              transition-all duration-500
+            "
+          />
+
           {coverImg ? (
-            <p className="text-[var(--text)] font-bold">{coverImg.name}</p>
+            <div className="z-10 flex flex-col items-center px-6">
+              {/* Preview */}
+              <img
+                src={URL.createObjectURL(coverImg)}
+                alt="preview"
+                className="
+                  w-52 h-52
+                  object-cover
+                  rounded-2xl
+                  mb-5
+                  border border-white/10
+                "
+              />
+
+              <p className="font-bold text-lg break-all text-center">
+                {coverImg.name}
+              </p>
+
+              <p className="text-zinc-500 text-sm mt-2">
+                Image ready to upload
+              </p>
+            </div>
           ) : (
-            <p className="text-[var(--text)] font-bold opacity-20">
-              Drag & Drop or Click to upload image
-            </p>
+            <div className="z-10 text-center">
+              <BsCloudUpload className="text-7xl text-pink-400 mx-auto mb-5" />
+
+              <p className="text-2xl font-bold">
+                Drop your image
+              </p>
+
+              <p className="text-zinc-500 mt-2">
+                PNG, JPG, WEBP supported
+              </p>
+            </div>
           )}
         </div>
+      </div>
 
-        {/* Title */}
-        <div>
-          <label className="block font-medium">Title</label>
-          <input
-            type="text"
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full border p-2 rounded mt-1 text-[var(--text)] bg-transparent focus-within:bg-[var(--bg-body)]"
-          />
+      {/* RIGHT SIDE */}
+      <div className="p-8 md:p-10 flex flex-col justify-between">
+        <div className="space-y-8">
+          {/* Title */}
+          <div>
+            <label className="text-sm text-zinc-500 uppercase tracking-[0.2em]">
+              Title
+            </label>
+
+            <input
+              type="text"
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter blog title..."
+              className="
+                w-full
+                mt-3
+                bg-transparent
+                border-b border-white/10
+                focus:border-pink-500
+                outline-none
+                py-4
+                text-3xl
+                font-bold
+                transition-all
+              "
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="text-sm text-zinc-500 uppercase tracking-[0.2em]">
+              Description
+            </label>
+
+            <textarea
+              required
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows="10"
+              placeholder="Write your thoughts..."
+              className="
+                w-full
+                mt-3
+                bg-[#0d0d0d]
+                border border-white/10
+                focus:border-pink-500
+                rounded-3xl
+                p-6
+                outline-none
+                resize-none
+                text-lg
+                transition-all duration-300
+              "
+            />
+          </div>
         </div>
 
-        {/* Description */}
-        <div>
-          <label className="block font-medium">Description</label>
-          <textarea
-            required
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full border p-2 rounded mt-1 text-[var(--text)] bg-transparent focus-within:bg-[var(--bg-body)]"
-            rows="4"
-          ></textarea>
-        </div>
-
-        {/* Submit Button */}
+        {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
+          disabled={loading}
+          className="
+            mt-10
+            h-16
+            rounded-2xl
+            text-lg
+            font-bold
+            bg-white
+            text-black
+            hover:bg-pink-400
+            hover:shadow-[0_0_40px_rgba(236,72,153,0.4)]
+            transition-all duration-300
+            active:scale-[0.98]
+          "
         >
-          {loading? "Uploading...":"upload"}
+          {loading ? "Uploading..." : "Publish Blog"}
         </button>
-      </form>
-    </div>
-  );
+      </div>
+    </form>
+  </div>
+);
+
 }
 
 export default CreateImgBlog;

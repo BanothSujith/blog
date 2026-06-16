@@ -5,10 +5,9 @@ import {
   BsHeartbreak,
   BsHeartbreakFill,
 } from "react-icons/bs";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router";
-
 function GalleryCard({
   data,
   likeStatus,
@@ -19,137 +18,142 @@ function GalleryCard({
   const navigate = useNavigate();
   const [isProfileLoading, setProfileLoading] = useState(true);
   const [isImageLoading, setImageLoading] = useState(true);
-
   return (
-    <div
-      key={data._id}
-      className="bg-[var(--bg-card)] p-3 rounded-lg flex flex-col items-center  gap-3 w-full h-[34rem] aspect-square"
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3 }}
+      className=" mb-5 rounded-3xl overflow-hidden border  border-white/10 backdrop-blur-xl shadow-2xl group "
     >
-      {/* User Info */}
-      <div
-        className="flex gap-4 items-center text-[var(--text)] cursor-pointer"
-        onClick={() => {
-          navigate(`/user/${data.owner._id}`);
-        }}
-      >
-        <div className="relative w-8 h-8">
-          {isProfileLoading && (
-            <div className="absolute top-0 left-0 w-8 h-8 rounded-full bg-[var(--smallcard)] animate-pulse" />
-          )}
-          <img
-            src={data.owner?.profile || "https://via.placeholder.com/150"}
-            alt="Profile"
-            onLoad={() => setProfileLoading(false)}
-            className={`rounded-full w-8 h-8 object-cover object-top transition-opacity duration-300  ${
-              isProfileLoading ? "opacity-0" : "opacity-100"
-            }`}
-          />
-        </div>
-        <p className="flex flex-col leading-none">
-          <span className="font-semibold text-lg line-clamp-1 leading-none">
-            {data?.owner?.userName || "Anonymous"}
-          </span>
-          <span className="flex gap-1 items-center text-sm font-semibold">
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={data?.owner?.subscribers}
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -10, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {data?.owner?.subscribers || 0}
-              </motion.span>
-            </AnimatePresence>
-            subscribers
-          </span>
-        </p>
-        <button
-          onClick={(e) => handleSubscribe(e, data.owner._id)}
-          className="relative group capitalize md:mx-4 px-4 w-fit py-1 active:scale-95 border border-[#f1a6a6] overflow-hidden rounded-sm text-[var(--text)]"
+      {" "}
+      {/* Image */}{" "}
+      <div className="relative overflow-hidden">
+        {" "}
+        {isImageLoading && (
+          <div className="absolute inset-0 bg-white/10 animate-pulse z-10" />
+        )}{" "}
+        <img
+          src={data.coverimgUrl}
+          alt="post"
+          onLoad={() => setImageLoading(false)}
+          className={` w-full object-cover transition-all duration-700 group-hover:scale-105 ${isImageLoading ? "opacity-0" : "opacity-100"} `}
+        />{" "}
+        {/* Overlay */}{" "}
+        <div className=" absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 " />{" "}
+      </div>{" "}
+      {/* Content */}{" "}
+      <div className="p-4">
+        {" "}
+        {/* User */}{" "}
+        <div
+          onClick={() => navigate(`/user/${data.owner._id}`)}
+          className="flex items-center justify-between cursor-pointer"
         >
-          <span className="relative z-10">
-            {data?.isSubscribed ? "subscribed" : "subscribe"}
-          </span>
-          <span className="absolute left-0 top-0 h-full w-full bg-[#ac2424] transform -translate-x-full lg:group-hover:translate-x-0  active:scale-95 transition-transform duration-300 ease-in-out"></span>
-        </button>
-      </div>
-
-      {/* Image & Actions */}
-      <div className="h-full w-full flex flex-col gap-2">
-        <div className="relative h-[24rem] w-full rounded-lg overflow-hidden">
-          {isImageLoading && (
-            <div className="absolute top-0 left-0 h-full w-full bg-[var(--smallcard)] animate-pulse z-0" />
-          )}
-          <img
-            src={data.coverimgUrl}
-            alt="Uploaded"
-            onLoad={() => setImageLoading(false)}
-            className={`w-full h-full object-contain transition-opacity duration-300 ${
-              isImageLoading ? "opacity-0" : "opacity-100"
-            }`}
-          />
-        </div>
-
-        {/* Like, Dislike, Comment */}
-        <div className="flex gap-6 px-4 items-center text-2xl">
-          <span
-            className="text-[#eb6b91] cursor-pointer flex flex-row-reverse gap-2 items-center justify-center"
-            onClick={() => toggleLike(data._id)}
+          {" "}
+          <div className="flex items-center gap-3">
+            {" "}
+            <div className="relative">
+              {" "}
+              {isProfileLoading && (
+                <div className="absolute inset-0 rounded-full bg-white/20 animate-pulse" />
+              )}{" "}
+              <img
+                src={data.owner?.profile || "https://via.placeholder.com/150"}
+                alt="profile"
+                onLoad={() => setProfileLoading(false)}
+                className={` w-12 h-12 rounded-full object-cover border-2 border-cyan-400 ${isProfileLoading ? "opacity-0" : "opacity-100"} `}
+              />{" "}
+            </div>{" "}
+            <div>
+              {" "}
+              <h2 className="text-[var(--text)] font-semibold line-clamp-1">
+                {" "}
+                {data?.owner?.userName || "Anonymous"}{" "}
+              </h2>{" "}
+              <p className="text-gray-400 text-sm">
+                {" "}
+                {data?.owner?.subscribers || 0} subscribers{" "}
+              </p>{" "}
+            </div>{" "}
+          </div>{" "}
+          <button
+            onClick={(e) => handleSubscribe(e, data.owner._id)}
+            className={` px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${data?.isSubscribed ? "bg-green-500/20 text-[#0b853a] border border-green-400/30" : "bg-cyan-500/20 text-[#0534b4] border border-cyan-400/30 hover:bg-cyan-500/30"} `}
           >
-            {likeStatus[data._id]?.liked ? <BsHeartFill /> : <BsHeart />}
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={likeStatus[data._id]?.likeCount}
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ rotate: 360, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="text-lg"
-              >
-                {likeStatus[data._id]?.likeCount}
-              </motion.span>
-            </AnimatePresence>
-          </span>
-
-          <span
-            className="text-[#eb6b91] cursor-pointer flex flex-row-reverse gap-2 items-center justify-center"
-            onClick={() => toggleUnlike(data._id)}
-          >
-            {likeStatus[data._id]?.unliked ? (
-              <BsHeartbreakFill />
-            ) : (
-              <BsHeartbreak />
-            )}
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={likeStatus[data._id]?.unlikeCount}
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ rotate: 360, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="text-lg"
-              >
-                {likeStatus[data._id]?.unlikeCount}
-              </motion.span>
-            </AnimatePresence>
-          </span>
-        </div>
-
-        {/* Description */}
-        <p className="w-full px-2 text-[var(--text)]">
-          <span className="w-full text-[var(--text)] text-xs">
+            {" "}
+            {data?.isSubscribed ? "Subscribed" : "Subscribe"}{" "}
+          </button>{" "}
+        </div>{" "}
+        {/* Title */}{" "}
+        <div className="mt-4">
+          {" "}
+          <p className="text-gray-400 text-xs">
+            {" "}
             {formatDistanceToNow(new Date(data?.createdAt), {
               addSuffix: true,
-            })}
-          </span>
-          <span className="text-sm leading-tight font-semibold line-clamp-2">
-            {data?.title}
-          </span>
-        </p>
-      </div>
-    </div>
+            })}{" "}
+          </p>{" "}
+          <h3 className="text-[var(--text)] font-semibold text-lg mt-1 line-clamp-2">
+            {" "}
+            {data?.title}{" "}
+          </h3>{" "}
+        </div>{" "}
+        {/* Actions */}{" "}
+        <div className="flex items-center gap-6 mt-3">
+          {" "}
+          {/* Like */}{" "}
+          <button
+            onClick={() => toggleLike(data._id)}
+            className="flex items-center gap-2 text-pink-400 hover:scale-110 transition"
+          >
+            {" "}
+            {likeStatus[data._id]?.liked ? (
+              <BsHeartFill size={22} />
+            ) : (
+              <BsHeart size={22} />
+            )}{" "}
+            <AnimatePresence mode="wait">
+              {" "}
+              <motion.span
+                key={likeStatus[data._id]?.likeCount}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                {" "}
+                {likeStatus[data._id]?.likeCount}{" "}
+              </motion.span>{" "}
+            </AnimatePresence>{" "}
+          </button>{" "}
+          {/* Unlike */}{" "}
+          <button
+            onClick={() => toggleUnlike(data._id)}
+            className="flex items-center gap-2 text-red-400 hover:scale-110 transition"
+          >
+            {" "}
+            {likeStatus[data._id]?.unliked ? (
+              <BsHeartbreakFill size={22} />
+            ) : (
+              <BsHeartbreak size={22} />
+            )}{" "}
+            <AnimatePresence mode="wait">
+              {" "}
+              <motion.span
+                key={likeStatus[data._id]?.unlikeCount}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                {" "}
+                {likeStatus[data._id]?.unlikeCount}{" "}
+              </motion.span>{" "}
+            </AnimatePresence>{" "}
+          </button>{" "}
+        </div>{" "}
+      </div>{" "}
+    </motion.div>
   );
 }
-
 export default GalleryCard;
